@@ -1,0 +1,211 @@
+/* Local responsive overrides for the public site. */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+img,
+iframe,
+video,
+canvas {
+    max-width: 100%;
+}
+
+.rux-mobile-menu-toggle {
+    display: none;
+}
+
+@media screen and (max-width: 991px) {
+    .tb-site-header.tb-style1 .tb-main-header {
+        height: 64px;
+    }
+
+    .tb-main-header-in {
+        padding: 0 15px;
+    }
+
+    .tb-main-header-left .tb-site-branding-mobile {
+        display: block;
+        position: static;
+        transform: none;
+    }
+
+    .tb-main-header-left .tb-custom-logo {
+        max-width: 150px;
+        height: auto;
+    }
+
+    .rux-mobile-menu-toggle {
+        display: flex;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        width: 42px;
+        height: 42px;
+        padding: 9px;
+        transform: translateY(-50%);
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        border: 1px solid rgba(255, 255, 255, .35);
+        border-radius: 4px;
+        background: rgba(0, 0, 0, .2);
+        cursor: pointer;
+        z-index: 110;
+    }
+
+    .rux-mobile-menu-toggle span:not(.sr-only) {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #fff;
+    }
+
+    .rux-mobile-menu-toggle .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .tb-main-header-center {
+        position: static;
+        transform: none;
+        width: auto;
+    }
+
+    .tb-main-nav#rux-mobile-nav {
+        display: none !important;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: calc(100vh - 64px);
+        overflow-y: auto;
+        background: #fff;
+        border: 0;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .15);
+    }
+
+    .tb-main-nav#rux-mobile-nav.rux-mobile-nav-open {
+        display: block !important;
+    }
+
+    .tb-main-nav#rux-mobile-nav .tb-primary-nav-list {
+        display: block;
+        height: auto;
+        padding: 8px 0;
+    }
+
+    .tb-main-nav#rux-mobile-nav .menu-item {
+        height: auto;
+        margin: 0;
+    }
+
+    .tb-main-nav#rux-mobile-nav .menu-item > a {
+        min-height: 46px;
+        padding: 11px 20px;
+        color: #333;
+        font-size: 15px;
+        line-height: 1.4;
+    }
+
+    .tb-main-nav#rux-mobile-nav .tb-site-branding {
+        display: none;
+    }
+
+    .tb-main-header-right.hide_sm_stefan {
+        display: none;
+    }
+
+    .container,
+    .container-fluid {
+        width: 100%;
+        max-width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .row {
+        margin-right: -10px;
+        margin-left: -10px;
+    }
+
+    [class*="col-"] {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .tb-btn,
+    .btn {
+        max-width: 100%;
+        white-space: normal;
+    }
+
+    .table-responsive,
+    .dataTables_wrapper {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    iframe[src*="tradingview"],
+    iframe[src*="coinlib"] {
+        width: 100% !important;
+        min-height: 180px;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h2 {
+        font-size: 1.7rem;
+    }
+
+    h3 {
+        font-size: 1.45rem;
+    }
+
+    .tb-site-header.tb-style1 .tb-main-header {
+        height: 60px;
+    }
+
+    .tb-main-nav#rux-mobile-nav {
+        top: 60px;
+        max-height: calc(100vh - 60px);
+    }
+
+    .tb-main-header-left .tb-custom-logo {
+        max-width: 125px;
+    }
+
+    .rux-mobile-menu-toggle {
+        right: 12px;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .pricing_two_stef .card-title {
+        font-size: 1rem;
+    }
+
+    .tb-section-heading h2,
+    .section-heading h2 {
+        line-height: 1.25;
+    }
+}

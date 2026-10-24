@@ -1,0 +1,36 @@
+-- pgloader migration script: MariaDB/MySQL (ruxfund) -> PostgreSQL (Supabase)
+--
+-- Usage:
+--   1. Fill in the Supabase target connection string below (or export
+--      SUPABASE_DB_URL and reference it, see notes at bottom).
+--   2. Make sure your local MariaDB "ruxfund" database is running and reachable.
+--   3. Run:  pgloader migrate_to_supabase.load
+--
+-- Supabase connection string is found in: Project Settings -> Database ->
+-- Connection string (URI). Use the "Session" pooler port (5432) for pgloader,
+-- not the transaction pooler (6543), since pgloader needs a persistent session.
+
+LOAD DATABASE
+     FROM      mysql://ruxfund_user:NewPassword123!@127.0.0.1:3306/ruxfund
+     INTO      postgresql://postgres.jbsqeagoqqwsuldzfntx:23409036479633@aws-1-eu-west-1.pooler.supabase.com:5432/postgres
+
+WITH include drop,
+     create tables,
+     create indexes,
+     reset sequences,
+     foreign keys,
+     downcase identifiers
+
+SET maintenance_work_mem to '256MB',
+    work_mem to '128MB',
+    search_path to 'public'
+
+CAST type tinyint to smallint drop typemod,
+     type bigint to bigint drop typemod,
+     type datetime to timestamptz drop default drop not null using zero-dates-to-null,
+     type timestamp to timestamptz drop default drop not null using zero-dates-to-null
+
+BEFORE LOAD DO
+$$ create schema if not exists public; $$
+
+;

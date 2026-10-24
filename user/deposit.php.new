@@ -1,0 +1,213 @@
+<?php
+require_once __DIR__ . '/../includes/server.php';
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/includes/checkuser.php';
+
+$plan = $_GET['plan'] ?? null;
+if(!isset($plan) || empty($plan)){
+    header('location: plan.php');
+    exit;
+}
+$plandetails = $con ? get_data($con, 'plan', 'id', $plan) : ['min' => 0, 'max' => 0, 'id' => $plan];
+
+if ($con) {
+    deposit($con, $getuser['id'] ?? 0);
+}
+$info = $_GET['amt'] ?? '';
+$coin = $_SESSION['coin'] ?? 'BTC';
+
+$btcval = $con ? get_bit_rate() : 1;
+$ethval = $con ? get_eth_rate() : 1;
+$usdtval = $con ? get_usdt_rate() : 1;
+
+$coinname = $coin;
+
+switch ($coinname) {
+  case "BTC":
+    $val = $btcval;
+    break;
+  case "ETH":
+    $val = $ethval;
+    break;
+    case "BNB":
+    $val = $bnbval;
+    break;
+    case "USDT":
+    $val = $usdtval;
+    break;
+    case "LTC":
+    $val = $ltcval;
+    break;
+  case "ADA":
+    $val = $adaval;
+    break;
+    case "XRP":
+    $val = $xrpval;
+    break;
+    case "TRX":
+    $val = $tronval;
+    break;
+  default:
+    $val = $btcval;
+}
+
+$address = $con ? get_data($con, 'sitewallet', 'type', $coin) : ['address' => 'Connect your database to enable wallet payments'];
+$page = array('id'=>2,'title'=>'Deposit | '.$getuser['username'].' ','bread'=>'<i class="fas fa-upload"></i> Deposit');
+$pagename = 'Deposit';
+?>
+
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+
+<!-- head @s -->
+<?php include 'includes/head.php';?>
+<!-- head @e -->
+
+<body class="nk-body npc-invest bg-lighter ">
+    <div class="nk-app-root">
+        <!-- wrap @s -->
+        <div class="nk-wrap ">
+            <!-- header @s -->
+            <?php include 'includes/header.php';?>
+            <!-- header @e -->
+            
+            
+            
+            
+            <!-- content @s -->
+            <div class="nk-content nk-content-fluid">
+                <div class="container-xl wide-xl">
+                    <div class="nk-content-inner">
+                        <div class="nk-content-body">
+                            <div class="content-page">
+                                
+                                <?php
+                              if(!isset($info)){
+                                ?>
+                                
+                                <div class="col-lg-6">
+                                            <div class="card card-bordered h-100">
+                                                <div class="card-inner">
+                                                    <div class="card-head">
+                                                        <h5 class="card-title">Deposit</h5>
+                                                    </div>
+                                                    <?php include 'includes/alert.php';?>
+                                                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']);?>" method="post">
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="cf-full-name">Amount</label>
+                                                            <input type="number" name="amount" class="form-control" id="cf-full-name" placeholder="$<?php echo $plandetails['min'];?> - $<?php echo $plandetails['max'];?>">
+                                                        </div>
+                                                            <input type="number" class="form-control" name="plan" hidden id="amount1" value="<?php echo $plandetails['id'];?>">
+                                                         <div class="form-group">
+                                                            <label class="form-label" for="default-06">Payment Currency</label>
+                                                            <div class="form-control-wrap ">
+                                                                <div class="form-control-select">
+                                                                    <select name="coin" class="form-control" id="default-06">
+                                                                        <option label="Choose Currency"></option>
+                                                                        <option value="BTC">Bitcoin - BTC</option>
+                                                                        <option value="ETH">Ethereum - ETH</option>
+                                                                        <option value="USDT">Tether USD - USDT</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="form-label" for="default-06">Method Of Payment</label>
+                                                            <div class="form-control-wrap ">
+                                                                <div class="form-control-select">
+                                                                    <select name="by" class="form-control" id="default-06">
+                                                                        <option label="Choose Payment Method"></option>
+                                                                        <option label="Wallet" value="2">Wallet</option>
+                                                                        <option value="1">Account Balance</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>    
+                                                        <div class="form-group">
+                                                            <button type="submit" name="invest" class="btn btn-lg btn-primary">Make Deposit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                
+                                <?php
+                               }else{
+                               ?>
+                                
+                                <!-- .Payment content-page -->
+                                <div class="nk-block-head nk-block-head-lg wide-md">
+                                    <div class="nk-block-head-content">
+                                        <div class="nk-block-head-sub"><span>Make Payment</span></div>
+                                        <h2 class="nk-block-title fw-normal">Complete your investment!</h2>
+                                        <div class="example-alert">
+                                                        <div class="alert alert-warning alert-icon">
+                                                            <em class="icon ni ni-alert-circle"></em> Please to avoid <strong>lost of funds</strong>. Make payment into the specified wallet and network. <br><a href="contact.php" class="alert-link">Get Support</a>
+                                                        </div>
+                                        </div>
+                                    </div>
+                                </div><!-- .nk-block-head -->
+                                
+                                <div class="col-sm-6 col-lg-4" style="margin-bottom: 10px">
+                                        <div class="gallery card card-bordered">
+                                                <img class="w-100 rounded-top" src="../images/QR/<?php echo $coin;?>.png" alt="">
+                                        </div>
+                                    </div>
+                                
+                                
+                                <div class="card card-preview">
+                                        <div class="card-inner">
+                                            <div class="row">
+                                                <div class="col-md-6 col-lg-5">
+                                                    <div class="card">
+                                                        <div class="kanban-item">
+                                                            <div class="kanban-item-title">
+                                                                <h6 id="cardTT_6" class="title"><?php echo $address['address'];?></h6>
+                                                            </div><br>
+                                                            <button style="border-color: green" class="btn btn-sm clipboard-init" title="Copy to clipboard" data-clipboard-target="#cardTT_6" data-clip-success="Copied" data-clip-text="Copy"><span class="clipboard-text">Copy</span></button>
+                                                            <br>
+                                                            <div class="kanban-item-text">
+                                                                <p>Payment to this Wallet accepts only <?php echo $coin;?></p>
+                                                            </div>
+                                                            <ul class="kanban-item-tags">
+                                                                <li><span class="badge badge-warning"><?php echo number_format((float)$info/$val, 2, '.', '');?> <?php echo $coin;?></span></li>
+                                                                
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div><!-- .col -->
+                                            </div>
+                                            <div class="col-12" style="margin-top: 20px">
+                                    <ul class="align-center flex-wrap flex-sm-nowrap gx-4 gy-2">
+                                        <li>
+                                            <a href="transaction.php" class="btn btn-lg btn-primary">History</a>
+                                        </li>
+                                        <li>
+                                            <a href="index.php" data-dismiss="modal" class="link link-light">Back To Home</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                        </div>
+                                    </div><!-- .card-preview -->
+                                
+                                <!-- .Payment content-page -->
+                                
+                                
+                                
+                                
+                                <?php
+                                      }
+                                    ?>
+                            </div><!-- .content-page -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- content @e -->
+            
+            
+            
+            
+            <!-- footer @s -->
+            <?php include 'includes/footer.php';?>
+            <!-- footer @e -->

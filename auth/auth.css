@@ -1,0 +1,21 @@
+@media (max-width: 700px) {
+  .hide_sm_stefan {
+    display: none !important;
+  }
+
+  .ghehw{
+      padding-top: 150px !important;
+  }
+}
+
+@media (min-width: 700px) {
+  .hide_lg_stefan {
+    display: none !important;
+  }
+}
+
+.clients .client .img-fluid{
+    width: 150px !important;
+    height: 100px !important;
+    object-fit: contain !important;
+}
