@@ -2188,7 +2188,11 @@ function login($con){
    if(!isset($_POST['login'])){
        return;
    }
-
+   if(!$con){
+       set_flash_message('Authentication is temporarily unavailable. Please try again later.', 'alert-danger');
+       header('location: login.php');
+       exit;
+   }
    $header = 'Location: ../user/index.php';
    $username = trim($_POST['username'] ?? '');
    $password = trim($_POST['password'] ?? '');
