@@ -65,7 +65,7 @@ if((time() - $monitor)>3600){
 
 set_my_session($domain,$ip,$useragent);
 
-require_once __DIR__ . '/pg_mysqli_pgsql_compat.php';
+require_once __DIR__ . '/mysqli_pgsql_compat.php';
 
 function getConnect(){
     $dbHost = getenv('DB_HOST') ?: getenv('DB_SERVER') ?: '127.0.0.1';
