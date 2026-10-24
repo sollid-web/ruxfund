@@ -1,22 +1,22 @@
 <?php
 /**
- * mysqli-compatible shim backed by PDO/pgsql so the existing procedural
+ * PgMysqli-compatible shim backed by PDO/pgsql so the existing procedural
  * mysqli_* call sites throughout the app work unchanged against Postgres.
  * Only implements what this codebase actually uses.
  */
 
-if (!defined('MYSQLI_ASSOC')) {
-    define('MYSQLI_ASSOC', 1);
+if (!defined('PG_MYSQLI_ASSOC')) {
+    define('PG_MYSQLI_ASSOC', 1);
 }
 
-if (!class_exists('mysqli_sql_exception')) {
-    class mysqli_sql_exception extends \RuntimeException {}
+if (!class_exists('PgMysqliException')) {
+    class PgMysqliException extends \RuntimeException {}
 }
 
-if (!class_exists('mysqli_result')) {
-    // Implements Iterator so `foreach ($mysqli_query_result as $row)` works,
-    // matching real mysqli_result behaviour.
-    class mysqli_result implements \Iterator {
+if (!class_exists('PgMysqliResult')) {
+    // Implements Iterator so `foreach ($pg_mysqli_query_result as $row)` works,
+    // matching real PgMysqliResult behaviour.
+    class PgMysqliResult implements \Iterator {
         public $num_rows;
         private $rows;
         private $pointer = 0;
@@ -30,14 +30,14 @@ if (!class_exists('mysqli_result')) {
             return $this->fetch_array();
         }
 
-        public function fetch_array($mode = MYSQLI_ASSOC) {
+        public function fetch_array($mode = PG_MYSQLI_ASSOC) {
             if ($this->pointer >= $this->num_rows) {
                 return null;
             }
             return $this->rows[$this->pointer++];
         }
 
-        public function fetch_all($mode = MYSQLI_ASSOC) {
+        public function fetch_all($mode = PG_MYSQLI_ASSOC) {
             return $this->rows;
         }
 
@@ -63,8 +63,8 @@ if (!class_exists('mysqli_result')) {
     }
 }
 
-if (!class_exists('mysqli_stmt')) {
-    class mysqli_stmt {
+if (!class_exists('PgMysqliStatement')) {
+    class PgMysqliStatement {
         private $pdo;
         private $sql;
         private $params = [];
@@ -102,13 +102,13 @@ if (!class_exists('mysqli_stmt')) {
             if (!$this->pdoStmt) {
                 return false;
             }
-            return new mysqli_result($this->pdoStmt->fetchAll(\PDO::FETCH_ASSOC));
+            return new PgMysqliResult($this->pdoStmt->fetchAll(\PDO::FETCH_ASSOC));
         }
     }
 }
 
-if (!class_exists('mysqli')) {
-    class mysqli {
+if (!class_exists('PgMysqli')) {
+    class PgMysqli {
         public $pdo;
         public $insert_id = 0;
         public $error = '';
@@ -118,15 +118,15 @@ if (!class_exists('mysqli')) {
         }
 
         public function prepare($sql) {
-            return new mysqli_stmt($this->pdo, $sql);
+            return new PgMysqliStatement($this->pdo, $sql);
         }
 
         public function query($sql) {
-            return mysqli_query($this, $sql);
+            return pg_mysqli_query($this, $sql);
         }
 
         public function real_escape_string($s) {
-            return mysqli_real_escape_string($this, $s);
+            return pg_mysqli_real_escape_string($this, $s);
         }
 
         public function set_charset($charset) {}
@@ -146,26 +146,26 @@ function pg_translate_query(string $sql): string {
     return $sql;
 }
 
-function mysqli_connect($host, $user, $pass, $dbname) {
+function pg_mysqli_connect($host, $user, $pass, $dbname) {
     try {
         $port = getenv('DB_PORT') ?: '5432';
         $dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
         $pdo = new \PDO($dsn, $user, $pass, [
             \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
         ]);
-        return new mysqli($pdo);
+        return new PgMysqli($pdo);
     } catch (\PDOException $e) {
         $GLOBALS['__mysqli_connect_error'] = $e->getMessage();
         return false;
     }
 }
 
-function mysqli_connect_error() {
+function pg_mysqli_connect_error() {
     return $GLOBALS['__mysqli_connect_error'] ?? '';
 }
 
-function mysqli_query($con, $sql) {
-    if (!($con instanceof mysqli)) {
+function pg_mysqli_query($con, $sql) {
+    if (!($con instanceof PgMysqli)) {
         return false;
     }
     $translated = pg_translate_query($sql);
@@ -180,7 +180,7 @@ function mysqli_query($con, $sql) {
             }
             return true;
         }
-        return new mysqli_result($stmt->fetchAll(\PDO::FETCH_ASSOC));
+        return new PgMysqliResult($stmt->fetchAll(\PDO::FETCH_ASSOC));
     } catch (\PDOException $e) {
         $con->error = $e->getMessage();
         error_log('Query failed: ' . $e->getMessage() . ' SQL: ' . $translated);
@@ -189,11 +189,11 @@ function mysqli_query($con, $sql) {
 }
 
 /**
- * Parameterized variant of mysqli_query() for building queries with `?`
+ * Parameterized variant of pg_mysqli_query() for building queries with `?`
  * placeholders instead of interpolating values into the SQL string.
  */
-function mysqli_query_params($con, $sql, array $params = []) {
-    if (!($con instanceof mysqli)) {
+function pg_mysqli_query_params($con, $sql, array $params = []) {
+    if (!($con instanceof PgMysqli)) {
         return false;
     }
     $translated = pg_translate_query($sql);
@@ -206,7 +206,7 @@ function mysqli_query_params($con, $sql, array $params = []) {
             }
             return true;
         }
-        return new mysqli_result($stmt->fetchAll(\PDO::FETCH_ASSOC));
+        return new PgMysqliResult($stmt->fetchAll(\PDO::FETCH_ASSOC));
     } catch (\PDOException $e) {
         $con->error = $e->getMessage();
         error_log('Query failed: ' . $e->getMessage() . ' SQL: ' . $translated);
@@ -214,36 +214,36 @@ function mysqli_query_params($con, $sql, array $params = []) {
     }
 }
 
-function mysqli_fetch_assoc($result) {
-    return $result instanceof mysqli_result ? $result->fetch_assoc() : null;
+function pg_mysqli_fetch_assoc($result) {
+    return $result instanceof PgMysqliResult ? $result->fetch_assoc() : null;
 }
 
-function mysqli_fetch_array($result, $mode = MYSQLI_ASSOC) {
-    return $result instanceof mysqli_result ? $result->fetch_array($mode) : null;
+function pg_mysqli_fetch_array($result, $mode = PG_MYSQLI_ASSOC) {
+    return $result instanceof PgMysqliResult ? $result->fetch_array($mode) : null;
 }
 
-function mysqli_num_rows($result) {
-    return $result instanceof mysqli_result ? $result->num_rows : 0;
+function pg_mysqli_num_rows($result) {
+    return $result instanceof PgMysqliResult ? $result->num_rows : 0;
 }
 
-function mysqli_insert_id($con) {
-    return $con instanceof mysqli ? $con->insert_id : 0;
+function pg_mysqli_insert_id($con) {
+    return $con instanceof PgMysqli ? $con->insert_id : 0;
 }
 
-function mysqli_real_escape_string($con, $s) {
+function pg_mysqli_real_escape_string($con, $s) {
     // Parameterized queries are used for writes; this is only a fallback
     // for any remaining ad-hoc string building.
     return str_replace(["\\", "'"], ["\\\\", "''"], (string) $s);
 }
 
-function mysqli_set_charset($con, $charset) {
+function pg_mysqli_set_charset($con, $charset) {
     return true;
 }
 
-function mysqli_error($con) {
-    return $con instanceof mysqli ? $con->error : '';
+function pg_mysqli_error($con) {
+    return $con instanceof PgMysqli ? $con->error : '';
 }
 
-function mysqli_close($con) {
+function pg_mysqli_close($con) {
     return true;
 }

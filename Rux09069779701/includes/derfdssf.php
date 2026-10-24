@@ -1,7 +1,7 @@
 <?php
 function get_data_r($con,$table,$column,$key){
 $query = "SELECT * FROM ".$table." WHERE ".$column."='$key'";
-			$result=mysqli_query($con, $query);
+			$result=pg_mysqli_query($con, $query);
                         if($result->num_rows>0){
                             $data= $result->fetch_assoc();
                         }else{

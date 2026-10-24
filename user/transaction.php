@@ -40,7 +40,7 @@ $page = array('id'=>5,'title'=>'Transactions | '.$getuser['username'].' ','bread
 $table = 1;
 
 $pagename = 'Transactions';
-$tranz = $tranz instanceof mysqli_result ? $tranz->fetch_all(MYSQLI_ASSOC) : array();
+$tranz = $tranz instanceof PgMysqliResult ? $tranz->fetch_all(PG_MYSQLI_ASSOC) : array();
 $transaction_count = count($tranz);
 $transaction_total = 0;
 foreach ($tranz as $transaction) {

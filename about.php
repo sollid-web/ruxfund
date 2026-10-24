@@ -1665,7 +1665,7 @@ $pagename = 'About Us';
                                                                         <?php
                                                                         $faq_result = loop_table($con, 'faq');
                                                                         if ($faq_result && $faq_result->num_rows > 0) {
-                                                                            while ($faq_item = mysqli_fetch_assoc($faq_result)) {
+                                                                            while ($faq_item = pg_mysqli_fetch_assoc($faq_result)) {
                                                                                 echo '<div style="text-align:left; margin-bottom:18px; padding:16px 18px; background:#fff; border:1px solid #e9e9e9; border-radius:8px;">';
                                                                                 echo '<h4 style="margin:0 0 8px; font-size:18px; color:#0b1727;">' . htmlspecialchars($faq_item['question']) . '</h4>';
                                                                                 echo '<p style="margin:0; color:#555;">' . nl2br(htmlspecialchars($faq_item['answer'])) . '</p>';

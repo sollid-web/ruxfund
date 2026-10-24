@@ -72,7 +72,7 @@ $pagename = 'Withdrawal';
                                                                 <div class="form-control-select">
                                                                     <select name="name" class="form-control" id="default-06">
                                                                         <?php
-                                                                    while($getmegacategory=mysqli_fetch_array($loopwallet))
+                                                                    while($getmegacategory=pg_mysqli_fetch_array($loopwallet))
                                                                       {
                                                                         ?>
                                                                    <option value='<?php echo ucwords($getmegacategory['type']).' - '.$getmegacategory['wallet'];?>'><?php echo ucwords($getmegacategory['type']).' - '.$getmegacategory['wallet'];?></option>

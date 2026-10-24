@@ -65,7 +65,7 @@ if((time() - $monitor)>3600){
 
 set_my_session($domain,$ip,$useragent);
 
-require_once __DIR__ . '/mysqli_pgsql_compat.php';
+require_once __DIR__ . '/pg_mysqli_pgsql_compat.php';
 
 function getConnect(){
     $dbHost = getenv('DB_HOST') ?: getenv('DB_SERVER') ?: '127.0.0.1';
@@ -79,18 +79,18 @@ function getConnect(){
     define('DB_NAME', $dbName);
 
     try {
-        $con = @mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
-    } catch (mysqli_sql_exception $exception) {
+        $con = @pg_mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
+    } catch (PgMysqliException $exception) {
         error_log('Database connection failed: ' . $exception->getMessage());
         return null;
     }
 
     if (!$con) {
-        error_log('Database connection failed: ' . mysqli_connect_error());
+        error_log('Database connection failed: ' . pg_mysqli_connect_error());
         return null;
     }
 
-    mysqli_set_charset($con, 'utf8mb4');
+    pg_mysqli_set_charset($con, 'utf8mb4');
 
     return $con;
 }

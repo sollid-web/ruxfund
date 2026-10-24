@@ -436,8 +436,8 @@ function get_plan_ref($con,$num){
 }
 
 function getmax($con,$table,$column){
-    $query=mysqli_query($con,"select max(".$column.") as maxid from ".$table."");
-	$result=mysqli_fetch_array($query);
+    $query=pg_mysqli_query($con,"select max(".$column.") as maxid from ".$table."");
+	$result=pg_mysqli_fetch_array($query);
 	 $maxid=$result['maxid'];
          return $maxid;
 }
@@ -1256,12 +1256,12 @@ function total_btwn_user($con,$type,$column,$start,$stop,$user){
 }
 
 function get_btwn_user($con,$table,$type,$column,$start,$stop,$user){
-    $stmt = mysqli_query_params($con,"SELECT * FROM $table WHERE $column >= ? AND $column <= ? AND type = ? AND sender = ?", [$start,$stop,$type,$user]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM $table WHERE $column >= ? AND $column <= ? AND type = ? AND sender = ?", [$start,$stop,$type,$user]);
     return $stmt;
 }
 
 function get_btwn($con,$table,$type,$column,$start,$stop){
-    $stmt = mysqli_query_params($con,"SELECT * FROM $table WHERE $column >= ? AND $column <= ? AND type = ?", [$start,$stop,$type]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM $table WHERE $column >= ? AND $column <= ? AND type = ?", [$start,$stop,$type]);
     return $stmt;
 }
 
@@ -1269,7 +1269,7 @@ function delete_wallet($con){
     if(isset($_POST['del_wallet'])){
         $data=$_POST['id'];
         $dataname=$_POST['name'];
-        $delete=mysqli_query_params($con,"DELETE FROM wallet WHERE id=?", [$data]);
+        $delete=pg_mysqli_query_params($con,"DELETE FROM wallet WHERE id=?", [$data]);
         if($delete == true){
                 $_SESSION["info"]['info']='Successful. You have deleted <strong class="text-capitalize">'.$dataname.'</strong>';
                 $_SESSION["time"]=time();
@@ -1471,7 +1471,7 @@ function update_info ($con,$user){
   }
         
             if($_SESSION['info']['info']===1){
-            $update=mysqli_query_params($con,"UPDATE users SET country=?,email=? WHERE id=?", [$country,$email,$user]);
+            $update=pg_mysqli_query_params($con,"UPDATE users SET country=?,email=? WHERE id=?", [$country,$email,$user]);
             if($update==true){
                 $_SESSION["info"]['info']='Succesful,Your Profile has been updated.';
                 $_SESSION["time"]=time();
@@ -1491,7 +1491,7 @@ function update_info ($con,$user){
 
 function close_inv($con,$rrrr){
     if(isset($rrrr)){
- $update=mysqli_query_params($con,"UPDATE transaction SET closed='1',closetime=? WHERE id=?", [time(),$rrrr]);
+ $update=pg_mysqli_query_params($con,"UPDATE transaction SET closed='1',closetime=? WHERE id=?", [time(),$rrrr]);
             if($update==true){
             }
 }
@@ -1870,32 +1870,32 @@ function loop_for_data_string($con,$table,$data,$key){
         return FALSE;
     }
 
-    $query=mysqli_query_params($con,"SELECT * FROM ".$table." WHERE ".$data."= ?", [$key]);
+    $query=pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE ".$data."= ?", [$key]);
     return $query;
 }
 
 function loop_transaction($con,$table,$data,$key,$or,$data2,$key2){
-    $query=mysqli_query_params($con,"SELECT * FROM ".$table." WHERE (".$data."= ? $or ".$data2." = ?) AND show_bonus = '1'", [$key,$key2]);
+    $query=pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE (".$data."= ? $or ".$data2." = ?) AND show_bonus = '1'", [$key,$key2]);
     return $query;
 }
 
 function loop_transaction_bonus($con,$table,$data,$key,$or,$data2,$key2){
-    $query=mysqli_query_params($con,"SELECT * FROM ".$table." WHERE ".$data."= ? $or ".$data2." = ?", [$key,$key2]);
+    $query=pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE ".$data."= ? $or ".$data2." = ?", [$key,$key2]);
     return $query;
 }
 
 function loop_transaction_limit($con,$table,$data,$key,$or,$data2,$key2){
-    $query=mysqli_query_params($con,"SELECT * FROM ".$table." WHERE (".$data."= ? $or ".$data2." = ?) AND show_bonus = '1' ORDER BY id DESC LIMIT 5", [$key,$key2]);
+    $query=pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE (".$data."= ? $or ".$data2." = ?) AND show_bonus = '1' ORDER BY id DESC LIMIT 5", [$key,$key2]);
     return $query;
 }
 
 function loop_transaction_3($con,$table,$data,$key,$or,$data2,$key2){
-    $query=mysqli_query_params($con,"SELECT * FROM ".$table." WHERE ".$data."= ? $or ".$data2." = ? AND status='1'", [$key,$key2]);
+    $query=pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE ".$data."= ? $or ".$data2." = ? AND status='1'", [$key,$key2]);
     return $query;
 }
 
 function loop_transfer($con,$table,$data){
-    $query=mysqli_query_params($con,"SELECT * FROM ".$table." WHERE (sender= ? OR receiver = ?) AND type='Transfer'", [$data,$data]);
+    $query=pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE (sender= ? OR receiver = ?) AND type='Transfer'", [$data,$data]);
     return $query;
 }
 
@@ -2064,7 +2064,7 @@ return $sent;
 
 function getprofit_per_investment($con,$tid){
    $profit = 0;
-   $tranz = mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
+   $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
    foreach($tranz as $gettrns){
      $num = get_data($con, 'plan', 'id', $gettrns['plan'])['num'];
      $calc = get_data($con, 'plan', 'id', $gettrns['plan'])['calc'];
@@ -2121,7 +2121,7 @@ function members_bonus($con){
 }
 
 function is_due($con,$tid){
-   $tranz = mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
+   $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
    foreach($tranz as $gettrns){
      $num = get_data($con, 'plan', 'id', $gettrns['plan'])['num'];
      $calc = get_data($con, 'plan', 'id', $gettrns['plan'])['calc'];
@@ -2140,7 +2140,7 @@ function is_due($con,$tid){
 
 function live_profit($con,$tid){
    $profit = 0;
-   $tranz = mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status IS NOT NULL", [$tid]);
+   $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status IS NOT NULL", [$tid]);
    foreach($tranz as $gettrns){
      $num = get_data($con, 'plan', 'id', $gettrns['plan'])['num'];
      $calc = get_data($con, 'plan', 'id', $gettrns['plan'])['calc'];
@@ -2155,7 +2155,7 @@ function live_profit($con,$tid){
 
 function get_double_data_or($con,$table,$column,$key,$column2,$key2){
     $query = "SELECT * FROM ".$table." WHERE ".$column."= ? OR ".$column2."= ? ";
-			$result=mysqli_query_params($con, $query, [$key,$key2]);
+			$result=pg_mysqli_query_params($con, $query, [$key,$key2]);
                         if($result->num_rows>0){
                             $data= $result->fetch_assoc();
                         }
@@ -2876,58 +2876,58 @@ function delete_data($con,$table,$column,$data){
 
 //loop table
 function loop_table_DESC($con,$table,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM ".$table." ORDER BY id ASC LIMIT ?", [(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM ".$table." ORDER BY id ASC LIMIT ?", [(int)$limit]);
     return $stmt;
 }
 
 function loop_table($con,$table){
-    $stmt = mysqli_query($con,"SELECT * FROM ".$table." ORDER BY id ASC");
+    $stmt = pg_mysqli_query($con,"SELECT * FROM ".$table." ORDER BY id ASC");
     return $stmt;
 }
 
 function loop_table_limit_rand($con,$table,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM ".$table." ORDER BY RAND() LIMIT ?", [(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM ".$table." ORDER BY RAND() LIMIT ?", [(int)$limit]);
     return $stmt;
 }
 
 function loop_data_limit_rand($con,$table,$column,$data,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM ".$table." WHERE $column = ? ORDER BY id ASC LIMIT ?", [$data,(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE $column = ? ORDER BY id ASC LIMIT ?", [$data,(int)$limit]);
     return $stmt;
 }
 
 function loop_data_limit_randd($con,$table,$column,$data,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM ".$table." WHERE $column = ? ORDER BY id DESC LIMIT ?", [$data,(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE $column = ? ORDER BY id DESC LIMIT ?", [$data,(int)$limit]);
     return $stmt;
 }
 
 function loop_data_limit_rand222($con,$table,$column,$data,$column2,$data2,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM ".$table." WHERE $column = ? AND $column2 = ? ORDER BY id DESC LIMIT ?", [$data,$data2,(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM ".$table." WHERE $column = ? AND $column2 = ? ORDER BY id DESC LIMIT ?", [$data,$data2,(int)$limit]);
     return $stmt;
 }
 
 
 function loop_table_limit_rand2($con,$table,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM ".$table." ORDER BY id LIMIT ?", [(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM ".$table." ORDER BY id LIMIT ?", [(int)$limit]);
     return $stmt;
 }
 
 function loop_for_data_two($con,$table,$column,$data,$column2,$data2,$limit){
-    $stmt = mysqli_query_params($con,"SELECT * FROM $table WHERE $column = ? AND $column2 = ? ORDER BY id ASC LIMIT ?", [$data,$data2,(int)$limit]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM $table WHERE $column = ? AND $column2 = ? ORDER BY id ASC LIMIT ?", [$data,$data2,(int)$limit]);
     return $stmt;
 }
 
 function loop_for_data($con,$table,$column,$data){
-    $stmt = mysqli_query_params($con,"SELECT * FROM $table WHERE $column = ? ORDER BY id ASC", [$data]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM $table WHERE $column = ? ORDER BY id ASC", [$data]);
     return $stmt;
 }
 
 function loop_for_double_data_or($con,$table,$column,$data,$column2,$data2){
-    $stmt = mysqli_query_params($con,"SELECT * FROM $table WHERE $column = ? OR $column2 = ? ORDER BY id ASC", [$data,$data2]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM $table WHERE $column = ? OR $column2 = ? ORDER BY id ASC", [$data,$data2]);
     return $stmt;
 }
 
 function loop_for_double_data_or_show($con,$table,$column,$data,$column2,$data2){
-    $stmt = mysqli_query_params($con,"SELECT * FROM $table WHERE ($column = ? OR $column2 = ?) AND show_bonus=1 ORDER BY id ASC", [$data,$data2]);
+    $stmt = pg_mysqli_query_params($con,"SELECT * FROM $table WHERE ($column = ? OR $column2 = ?) AND show_bonus=1 ORDER BY id ASC", [$data,$data2]);
     return $stmt;
 }
 
@@ -2938,7 +2938,7 @@ if(!$con){
 }
 
 $query = "SELECT * FROM ".$table." WHERE ".$column."= ?";
-			$result=mysqli_query_params($con, $query, [$key]);
+			$result=pg_mysqli_query_params($con, $query, [$key]);
                         if($result && $result->num_rows>0){
                             $data= $result->fetch_assoc();
                         }else{
