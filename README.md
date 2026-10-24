@@ -30,5 +30,12 @@ The application reads the following variables in [includes/server.php](includes/
 - `DB_PASSWORD`
 - `DB_NAME`
 
-## Database import
-Import the SQL dump in [faq.sql](faq.sql) into your database before testing the site.
+## Fresh Supabase database
+For a new, empty Supabase PostgreSQL project, run [supabase_schema.sql](supabase_schema.sql)
+in the Supabase SQL Editor. This creates the app tables and baseline configuration;
+it does not migrate existing users or transactions. New users will need to register.
+
+Do not run [schema.sql](schema.sql) directly in Supabase: it uses MySQL syntax.
+Update the seeded `site` settings, including `site_url` and contact email, before
+using the site. Do not put database credentials in Git; configure them as hosting
+provider environment variables instead.

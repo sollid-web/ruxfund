@@ -16,6 +16,19 @@ class ServerConfigTests(unittest.TestCase):
         self.assertIn("getenv('DB_PASSWORD')", content)
         self.assertIn("getenv('DB_NAME')", content)
 
+    def test_session_cookie_supports_proxy_hosted_signup(self):
+        server_file = (
+            pathlib.Path(__file__).resolve().parents[1]
+            / "includes"
+            / "server.php"
+        )
+        content = server_file.read_text(encoding="utf-8")
+
+        self.assertIn("session_set_cookie_params", content)
+        self.assertIn("'samesite' => 'Lax'", content)
+        self.assertNotIn("HTTP_X_FORWARDED_FOR", content)
+        self.assertNotIn("useragent_hash", content)
+
     def test_login_fails_closed_when_database_is_unavailable(self):
         functions_file = (
             pathlib.Path(__file__).resolve().parents[1]
