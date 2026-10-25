@@ -101,3 +101,10 @@ flowchart LR
     App --> Email[Mail sending functions]
     App --> Ext[External crypto/market widgets]
     Admin[Admin User] --> App
+```
+
+## Default investment plans
+
+The database defaults include Starter plus Growth, Pro, and Elite. The three added plans use the existing daily ROI interval (`calc = 24`): Growth is 2% per day for 14 days ($100–$4,999), Pro is 2.5% per day for 30 days ($5,000–$24,999), and Elite is 3% per day for 60 days ($25,000–$100,000). These are configured calculation rates, not guarantees or forecasts of actual investment performance. The current ROI implementation uses simple, non-compounding accrual.
+
+Fresh installations receive the plans through `supabase_schema.sql` (PostgreSQL/Supabase) or `schema.sql` (legacy MySQL). For an existing database, apply the matching idempotent script once: `migrations/postgresql/20261025_add_growth_pro_elite_plans.sql` or `migrations/mysql/20261025_add_growth_pro_elite_plans.sql`. Existing plan rows, including Starter, are not updated by these scripts.

@@ -162,6 +162,15 @@ ON CONFLICT (id) DO NOTHING;
 INSERT INTO plan (type, name, percent, ref, min, max, num, calc)
 SELECT 1, 'Starter', 1, 5, 10, 1000000, 1, 24
 WHERE NOT EXISTS (SELECT 1 FROM plan);
+INSERT INTO plan (type, name, percent, ref, min, max, num, calc)
+SELECT 1, 'Growth', 2.0000, 5.0000, 100.00, 4999.00, 14, 24
+WHERE NOT EXISTS (SELECT 1 FROM plan WHERE lower(name) = lower('Growth'));
+INSERT INTO plan (type, name, percent, ref, min, max, num, calc)
+SELECT 1, 'Pro', 2.5000, 5.0000, 5000.00, 24999.00, 30, 24
+WHERE NOT EXISTS (SELECT 1 FROM plan WHERE lower(name) = lower('Pro'));
+INSERT INTO plan (type, name, percent, ref, min, max, num, calc)
+SELECT 1, 'Elite', 3.0000, 5.0000, 25000.00, 100000.00, 60, 24
+WHERE NOT EXISTS (SELECT 1 FROM plan WHERE lower(name) = lower('Elite'));
 
 INSERT INTO sitewallet (type, address)
 VALUES ('BTC', ''), ('ETH', ''), ('USDT', '')
