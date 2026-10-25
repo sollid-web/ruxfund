@@ -1384,16 +1384,19 @@ $plan_page = 1;
                                                                     <h5
                                                                         class="card-title text-muted text-uppercase text-center">
                                                                         <?php echo $plans['name'];?></h5>
-                                                                    <h6 class="card-price text-center"><?php $_pct = $plans['percent'] ?? 0; $_num = max(1, (int)($plans['num'] ?? 1)); echo number_format($_pct/$_num,1);?>%<span
-                                                                            class="period">/Daily</span></h6>
+                                                                    <h6 class="card-price text-center"><?php echo number_format((float)($plans['percent'] ?? 0), 4);?>%<span
+                                                                            class="period">/Full term</span></h6>
                                                                     <hr>
                                                                     <ul class="fa-ul">
                                                                         <li><span class="fa-li"><i
                                                                                     class="fas fa-check"></i></span><b>INVESTMENT:
                                                                             </b>$<?php echo number_format($plans['min'] ?? 0,2);?> - $<?php echo number_format($plans['max'] ?? 0,2);?></li>
                                                                         <li><span class="fa-li"><i
-                                                                                    class="fas fa-check"></i></span><b>PROFIT:
-                                                                            </b><?php $_pct = $plans['percent'] ?? 0; $_num = max(1, (int)($plans['num'] ?? 1)); echo number_format($_pct/$_num,1);?>% Daily</li>
+                                                                                    class="fas fa-check"></i></span><b>TOTAL TERM RETURN:
+                                                                            </b><?php echo number_format((float)($plans['percent'] ?? 0), 4);?>%</li>
+                                                                        <li><span class="fa-li"><i
+                                                                                    class="fas fa-check"></i></span><b>AVERAGE DAILY ACCRUAL (SIMPLE):
+                                                                            </b><?php echo number_format(plan_daily_accrual_percent($plans), 4);?>%</li>
                                                                         <li><span class="fa-li"><i
                                                                         class="fas fa-check"></i></span><b>REFERRAL
                                                                               BONUS: </b><?php echo $plans['ref'] ?? 0;?>%</li>

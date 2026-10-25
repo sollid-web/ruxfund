@@ -8,8 +8,16 @@ $w = $_GET['w'] ?? null;
 $b = $_GET['b'] ?? null;
 $t = $_GET['t'] ?? null;
 $close = $_GET['close'] ?? null;
-
-close_inv($con,$close);
+if ($con && filter_var($close, FILTER_VALIDATE_INT) && !empty($getuser['id'])) {
+    $closing_investment = get_data($con, 'transaction', 'id', (int)$close);
+    if ($closing_investment
+        && (int)$closing_investment['sender'] === (int)$getuser['id']
+        && $closing_investment['type'] === 'Deposit'
+        && (int)$closing_investment['status'] === 1
+        && (int)$closing_investment['closed'] === 0) {
+        close_inv($con, (int)$close);
+    }
+}
 
 if(isset($d)){
  $tranz = loop_transaction($con, 'transaction', 'sender', $getuser['id'], 'AND', 'type', 'Deposit');

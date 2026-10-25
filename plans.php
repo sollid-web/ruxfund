@@ -14,7 +14,7 @@ $plans = $con ? loop_table_DESC($con, 'plan', 200) : false;
     <div class="container">
         <div class="text-center mb-5">
             <h1>Investment Plans</h1>
-            <p>Review the currently available investment options and their published terms.</p>
+            <p>Review plan terms. Returns are simple, non-compounding estimates accrued linearly over each plan term.</p>
         </div>
         <div class="row">
         <?php if ($plans && $plans->num_rows > 0): foreach ($plans as $plan): ?>
@@ -26,7 +26,8 @@ $plans = $con ? loop_table_DESC($con, 'plan', 200) : false;
                         <dl>
                             <dt>Minimum deposit</dt><dd>$<?php echo number_format((float) $plan['min'], 2); ?></dd>
                             <dt>Maximum deposit</dt><dd>$<?php echo number_format((float) $plan['max'], 2); ?></dd>
-                            <dt>Total return</dt><dd><?php echo number_format((float) $plan['percent'], 4); ?>%</dd>
+                            <dt>Total return for full term</dt><dd><?php echo number_format((float) $plan['percent'], 4); ?>%</dd>
+                            <dt>Average daily accrual (simple)</dt><dd><?php echo number_format(plan_daily_accrual_percent($plan), 4); ?>%</dd>
                             <dt>Referral commission</dt><dd><?php echo number_format((float) $plan['ref'], 4); ?>%</dd>
                             <dt>Duration</dt><dd><?php echo (int) $plan['num']; ?> <?php echo htmlspecialchars(plan_day($plan['calc']), ENT_QUOTES, 'UTF-8'); ?></dd>
                         </dl>

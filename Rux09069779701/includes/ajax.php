@@ -282,8 +282,8 @@ if (! empty($_POST["setting_id"]) && ! empty($_POST["item"])) {
                                             </div>
                                                 <div class="col-md-6">
                                                 <div class="form-group">
-                                                <label >Percentage Profit</label>
-                                                <input type="number" class="form-control" name="profit" placeholder="Percentage Profit" value="<?php echo $dep_d['percent'];?>">
+                                                <label >Total return for full term (%)</label>
+                                                <input type="number" class="form-control" name="profit" placeholder="Total term return" value="<?php echo $dep_d['percent'];?>">
                                                 <input type="hidden" name="id" value="<?php echo $dep_d['id'];?>">
                                                 </div>
                                             </div>
@@ -449,4 +449,3 @@ if (! empty($_POST["setting_del"]) && ! empty($_POST["del_set_id"])) {
 <?php
 }
 ?>
-

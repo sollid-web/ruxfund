@@ -60,7 +60,7 @@ No verified live application URL was found in the repository or project metadata
 
 ### Optional production integrations
 
-Set `SMARTSUPP_KEY` in the Wasmer application environment to enable the Smartsupp live-chat loader. The integration is intentionally disabled when the key is absent; no demo chat account or hard-coded third-party key is included.
+The Smartsupp live-chat loader is included on public and logged-in user pages. It uses the supplied site widget key by default; set `SMARTSUPP_KEY` in the application environment to override it. The old Tidio widget has been removed from the logged-in footer to avoid displaying two chat providers.
 
 ## Technology stack
 
@@ -105,6 +105,8 @@ flowchart LR
 
 ## Default investment plans
 
-The database defaults include Starter plus Growth, Pro, and Elite. The three added plans use the existing daily ROI interval (`calc = 24`): Growth is 2% per day for 14 days ($100–$4,999), Pro is 2.5% per day for 30 days ($5,000–$24,999), and Elite is 3% per day for 60 days ($25,000–$100,000). These are configured calculation rates, not guarantees or forecasts of actual investment performance. The current ROI implementation uses simple, non-compounding accrual.
+The database defaults include Starter plus Growth, Pro, and Elite. A plan's `percent` is the **total, simple (non-compounding) return over its full term**, accrued linearly. Growth is 2% total over 14 days ($100–$4,999; approximately 0.1429% per day), Pro is 2.5% total over 30 days ($5,000–$24,999; approximately 0.0833% per day), and Elite is 3% total over 60 days ($25,000–$100,000; 0.05% per day). These are configured rates, not guarantees or forecasts of actual investment performance.
 
 Fresh installations receive the plans through `supabase_schema.sql` (PostgreSQL/Supabase) or `schema.sql` (legacy MySQL). For an existing database, apply the matching idempotent script once: `migrations/postgresql/20261025_add_growth_pro_elite_plans.sql` or `migrations/mysql/20261025_add_growth_pro_elite_plans.sql`. Existing plan rows, including Starter, are not updated by these scripts.
+
+Verified, active investments are also settled on authenticated-user requests and before the admin deposit list is queried. This request-time fallback is not sufficient to close investments during long periods with no traffic. On Supabase, apply `migrations/postgresql/20261025_schedule_maturity_sweep.sql` to enable the idempotent `pg_cron` maturity sweep (runs every minute); it marks mature deposits closed at the exact maturity timestamp. Confirm the job is enabled in Supabase Cron after applying it. The app caps ROI at the term boundary even if settlement is delayed.

@@ -16,4 +16,4 @@ function googleTranslateElementInit() {
 </script>
 
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script src="//code.tidio.co/r9d1uckrpiedfmnlke7t3qxpb8kxepjv.js" async></script>
+<?php require_once __DIR__ . '/../../includes/smartsupp.php'; ?>

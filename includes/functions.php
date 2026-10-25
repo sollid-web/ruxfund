@@ -840,6 +840,14 @@ function plan_day($data){
     return $data;
 }
 
+function plan_daily_accrual_percent($plan){
+    $duration_hours = (float)($plan['num'] ?? 0) * (float)($plan['calc'] ?? 0);
+    if($duration_hours <= 0){
+        return 0;
+    }
+    return (float)($plan['percent'] ?? 0) * 24 / $duration_hours;
+}
+
 function get_capital_due_day($data){
     $hr = 3600;
     $day = 86400;
@@ -1490,11 +1498,38 @@ function update_info ($con,$user){
 }
 
 function close_inv($con,$rrrr){
-    if(isset($rrrr)){
- $update=pg_mysqli_query_params($con,"UPDATE transaction SET closed='1',closetime=? WHERE id=?", [time(),$rrrr]);
-            if($update==true){
-            }
+    if(!$con || !is_numeric($rrrr) || (int)$rrrr <= 0){
+        return false;
+    }
+    $now = time();
+    return pg_mysqli_query_params($con,
+        "UPDATE transaction AS t
+         SET closed='1', closetime=LEAST(?, t.updated + (p.num::bigint * p.calc::bigint * 3600))
+         FROM plan AS p
+         WHERE t.id=? AND t.plan=p.id AND t.type='Deposit' AND t.status='1' AND t.closed='0'",
+        [$now, (int)$rrrr]
+    ) === true;
 }
+
+function settle_due_investments($con,$user_id=null){
+    if(!$con){
+        return false;
+    }
+    $now = time();
+    $sql = "UPDATE transaction AS t
+            SET closed='1', closetime=t.updated + (p.num::bigint * p.calc::bigint * 3600)
+            FROM plan AS p
+            WHERE t.plan=p.id AND t.type='Deposit' AND t.status='1' AND t.closed='0'
+              AND t.updated + (p.num::bigint * p.calc::bigint * 3600) <= ?";
+    $params = [$now];
+    if($user_id !== null){
+        if(!is_numeric($user_id) || (int)$user_id <= 0){
+            return false;
+        }
+        $sql .= " AND t.sender=?";
+        $params[] = (int)$user_id;
+    }
+    return pg_mysqli_query_params($con, $sql, $params) === true;
 }
 
 
@@ -1969,6 +2004,7 @@ function getbal($con,$user){
     $profit = 0;
     $totalprofit = 0;
     $t_totalprofit = 0;
+    settle_due_investments($con, (int)$user);
     $transaction = loop_for_double_data_or($con,'transaction','receiver',$user,'sender',$user);
     foreach($transaction as $gettrns){
         if($gettrns['receiver'] == $user && $gettrns['status']== 1){
@@ -2075,26 +2111,33 @@ return $sent;
 }
 
 
+function investment_profit_amount($con,$transaction,$now=null){
+    $plan = get_data($con, 'plan', 'id', $transaction['plan'] ?? 0);
+    if(!$plan){
+        return 0;
+    }
+    $duration_seconds = (int)$plan['num'] * (int)$plan['calc'] * 3600;
+    if($duration_seconds <= 0){
+        return 0;
+    }
+    $start = (int)($transaction['updated'] ?? 0);
+    $maturity = $start + $duration_seconds;
+    $now = $now ?? time();
+    $end = (int)($transaction['closed'] ?? 0) === 1 && !empty($transaction['closetime'])
+        ? min((int)$transaction['closetime'], $maturity)
+        : min((int)$now, $maturity);
+    $elapsed = max(0, $end - $start);
+    $term_return = (float)$plan['percent'] / 100;
+    return $term_return * (float)$transaction['amount'] * ($elapsed / $duration_seconds);
+}
+
 function getprofit_per_investment($con,$tid){
-   $profit = 0;
-   $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
-   foreach($tranz as $gettrns){
-     $num = get_data($con, 'plan', 'id', $gettrns['plan'])['num'];
-     $calc = get_data($con, 'plan', 'id', $gettrns['plan'])['calc'];
-     $days = 60 * 60 * $num * $calc ;
-     $capital = $gettrns['amount'];
-     $age = time()-$gettrns['updated'];
-     $percent = (get_data($con, 'plan', 'id', $gettrns['plan'])['percent'])/100;
-     
-       if($gettrns['closed'] == 0){
-       $howmanyrounds = $age/$days;
-       $profit = ($percent * $capital) * $howmanyrounds;
-       }else{
-       $howmanyrounds = ($gettrns['closetime'] - $gettrns['updated'])/$days;
-       $profit = ($percent * $capital) * $howmanyrounds;
-       }
-   }
-   return $profit;
+    $profit = 0;
+    $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
+    foreach($tranz as $gettrns){
+        $profit = investment_profit_amount($con, $gettrns);
+    }
+    return $profit;
 }
 
 function all_bonus($con,$user){
@@ -2133,36 +2176,32 @@ function members_bonus($con){
 }
 
 function is_due($con,$tid){
-   $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
-   foreach($tranz as $gettrns){
-     $num = get_data($con, 'plan', 'id', $gettrns['plan'])['num'];
-     $calc = get_data($con, 'plan', 'id', $gettrns['plan'])['calc'];
-     $due = 60 * 60 * $num * $calc ;
-     $age = time()-$gettrns['updated'];
-     if($age >= $due){
-       $is_due = TRUE;
-       $days = time() + ($due - $age);
-       }else{
-       $is_due = FALSE;
-       $days = time() + ($due - $age);
-       }
-   }
-   return array('due'=>$is_due,'on'=>$days); 
+    $result = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
+    if(!$result){
+        return ['due'=>false, 'on'=>null];
+    }
+    foreach($result as $transaction){
+        $plan = get_data($con, 'plan', 'id', $transaction['plan']);
+        if(!$plan){
+            return ['due'=>false, 'on'=>null];
+        }
+        $duration_seconds = (int)$plan['num'] * (int)$plan['calc'] * 3600;
+        if($duration_seconds <= 0){
+            return ['due'=>false, 'on'=>null];
+        }
+        $maturity = (int)$transaction['updated'] + $duration_seconds;
+        return ['due'=>time() >= $maturity, 'on'=>$maturity];
+    }
+    return ['due'=>false, 'on'=>null];
 }
 
 function live_profit($con,$tid){
-   $profit = 0;
-   $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status IS NOT NULL", [$tid]);
-   foreach($tranz as $gettrns){
-     $num = get_data($con, 'plan', 'id', $gettrns['plan'])['num'];
-     $calc = get_data($con, 'plan', 'id', $gettrns['plan'])['calc'];
-     $days = 60 * 60 * $num * $calc ;
-     $capital = $gettrns['amount'];
-     $age = time()-$gettrns['updated'];
-     $percent = (get_data($con, 'plan', 'id', $gettrns['plan'])['percent'])/100;
-     $profit = ($percent * $capital) * ($age/$days);
-   }
-   return $profit;
+    $profit = 0;
+    $tranz = pg_mysqli_query_params($con,"SELECT * FROM transaction WHERE type = 'Deposit' AND id = ? AND status='1'", [$tid]);
+    foreach($tranz as $transaction){
+        $profit = investment_profit_amount($con, $transaction);
+    }
+    return $profit;
 }
 
 function get_double_data_or($con,$table,$column,$key,$column2,$key2){

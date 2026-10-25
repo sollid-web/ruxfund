@@ -235,7 +235,7 @@ $num_rows_trans = loop_for_double_data_or_show($con, 'transaction', 'sender', $g
                                             <div class="card-inner d-flex flex-column h-100">
                                                 <div class="card-title-group mb-3">
                                                     <div class="card-title">
-                                                        <h6 class="title">Top Invested Plans</h6>
+                                                        <h6 class="title">Investment plan total returns</h6>
                                                     </div>
                                                 </div>
                                                 <div class="progress-list gy-3">
@@ -247,7 +247,7 @@ $num_rows_trans = loop_for_double_data_or_show($con, 'transaction', 'sender', $g
                                                     <div class="progress-wrap">
                                                         <div class="progress-text">
                                                             <div class="progress-label"><?php echo $plans['name'];?></div>
-                                                            <div class="progress-amount"><?php echo $plans['percent'];?>%</div>
+                                                            <div class="progress-amount"><?php echo number_format((float)$plans['percent'], 4);?>% total</div>
                                                         </div>
                                                         <div class="progress progress-md">
                                                             <div class="progress-bar" data-progress="<?php echo $plans['percent'];?>"></div>

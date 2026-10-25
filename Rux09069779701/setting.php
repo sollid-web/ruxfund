@@ -163,8 +163,8 @@ $activemenu=6;
                                             </div>
                                                 <div class="col-md-4">
                                                 <div class="form-group">
-                                                <label >Percentage Profit</label>
-                                                <input type="number" class="form-control" name="profit" placeholder="Percentage Profit">
+                                                <label >Total return for full term (%)</label>
+                                                <input type="number" class="form-control" name="profit" placeholder="Total term return">
                                             </div>
                                             </div>
                                                 <div class="col-md-4">
@@ -222,7 +222,7 @@ $activemenu=6;
                                                             <th>Min</th>
                                                             <th>Max</th>
                                                             <th>Ref</th>
-                                                            <th>Percent/Duration</th>
+                                                            <th>Total return / duration</th>
                                                             <th>View/Delete</th>
                                                         </tr>
                                                     </thead>
@@ -240,7 +240,7 @@ $activemenu=6;
                                                             <td><?php echo '$ '.smart_amount($dep_d['min']);?></td>
                                                             <td><?php echo '$ '.smart_amount($dep_d['max']);?></td>
                                                             <td><?php echo $dep_d['ref'].' %';?></td>
-                                                            <td><?php echo $dep_d['percent'].' % / '. $dep_d['num'].' '. plan_day($dep_d['calc']);?></td>
+                                                            <td><?php echo number_format((float)$dep_d['percent'], 4).' % total / '. $dep_d['num'].' '. plan_day($dep_d['calc']);?></td>
                                                                 <td>
                                                                 <button type="button" class="btn btn-sm btn-primary btn-custom " value="<?php echo $dep_d['id'];?>" onclick="show_settings_modal(<?php echo $ssub;?>,this.value,'#usd','#show_tra')" >View</button>
                                                                     <button type="button" class="btn btn-sm btn-pink btn-custom " value="<?php echo $dep_d['id'];?>" onclick="show_del_settings(<?php echo $ssub;?>,this.value,'#del_tra','#show_del')">Delete</button>    
@@ -588,4 +588,4 @@ $activemenu=6;
 
     
     </body>
-</html> 
+</html>

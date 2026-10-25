@@ -2,6 +2,7 @@
 include('../includes/server.php');
 include 'includes/derfdssf.php';
 include('../includes/functions.php');
+settle_due_investments($con);
 
 
 $a = $_GET['a'];
