@@ -177,16 +177,16 @@ VALUES (1, 0, 0, 0, 0)
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
 INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Starter', 1, 5, 10, 1000000, 1, 24
+SELECT 1, 'Starter', 3.5000, 5, 200.00, 1999.00, 1, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` LIMIT 1);
 INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Growth', 2.0000, 5.0000, 100.00, 4999.00, 14, 24
+SELECT 1, 'Growth', 12.0000, 5.0000, 2000.00, 9999.00, 14, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Growth'));
 INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Pro', 2.5000, 5.0000, 5000.00, 24999.00, 30, 24
+SELECT 1, 'Pro', 22.0000, 5.0000, 10000.00, 19999.00, 30, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Pro'));
 INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Elite', 3.0000, 5.0000, 25000.00, 100000.00, 60, 24
+SELECT 1, 'Elite', 38.0000, 5.0000, 20000.00, 100000.00, 60, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Elite'));
 
 INSERT INTO `sitewallet` (`type`, `address`)
