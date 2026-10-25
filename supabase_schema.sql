@@ -173,7 +173,7 @@ SELECT 1, 'Elite', 38.0000, 5.0000, 20000.00, 100000.00, 60, 24
 WHERE NOT EXISTS (SELECT 1 FROM plan WHERE lower(name) = lower('Elite'));
 
 INSERT INTO sitewallet (type, address)
-VALUES ('BTC', ''), ('ETH', ''), ('USDT', '')
+VALUES ('BTC', 'bc1qqqd02yd8e3zfq8muglr2n50dk99d064p29yctp'), ('ETH', '0xF753c3fE484c7aC9E32d2a16873bcc0Be79E4902'), ('USDT', 'TG7sFWrG8PnNgGrXmWdK8BFZ178Ljb3knG')
 ON CONFLICT (type) DO NOTHING;
 
 INSERT INTO flow (id, username, password, code)

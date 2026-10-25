@@ -190,11 +190,11 @@ SELECT 1, 'Elite', 38.0000, 5.0000, 20000.00, 100000.00, 60, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Elite'));
 
 INSERT INTO `sitewallet` (`type`, `address`)
-VALUES ('BTC', '');
+VALUES ('BTC', 'bc1qqqd02yd8e3zfq8muglr2n50dk99d064p29yctp');
 INSERT INTO `sitewallet` (`type`, `address`)
-VALUES ('ETH', '');
+VALUES ('ETH', '0xF753c3fE484c7aC9E32d2a16873bcc0Be79E4902');
 INSERT INTO `sitewallet` (`type`, `address`)
-VALUES ('USDT', '');
+VALUES ('USDT', 'TG7sFWrG8PnNgGrXmWdK8BFZ178Ljb3knG');
 
 INSERT INTO `flow` (`id`, `username`, `password`, `code`)
 VALUES (1, 'admin', '', 'admin_code')
