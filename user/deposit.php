@@ -65,8 +65,13 @@ $pagename = 'Deposit';
 <section class="content-page">
     <div class="nk-block-head nk-block-head-lg wide-md"><div class="nk-block-head-sub"><span>Payment instructions</span></div><h2 class="nk-block-title fw-normal">Complete your investment</h2><p class="text-warning">Send only <?php echo htmlspecialchars($coin, ENT_QUOTES, 'UTF-8'); ?> to the configured wallet and network.</p></div>
     <div class="card card-bordered"><div class="card-inner">
-        <?php if ($rate > 0 && $wallet_address !== ''): ?>
-            <p>Send <strong><?php echo number_format($payment_amount / $rate, 8, '.', ''); ?> <?php echo htmlspecialchars($coin, ENT_QUOTES, 'UTF-8'); ?></strong> to:</p>
+        <?php if ($wallet_address !== ''): ?>
+            <?php if ($rate > 0): ?>
+                <p>Send <strong><?php echo number_format($payment_amount / $rate, 8, '.', ''); ?> <?php echo htmlspecialchars($coin, ENT_QUOTES, 'UTF-8'); ?></strong> to:</p>
+            <?php else: ?>
+                <p>Send the selected <?php echo htmlspecialchars($coin, ENT_QUOTES, 'UTF-8'); ?> to:</p>
+                <p class="text-warning">The live conversion amount is temporarily unavailable. Confirm the amount with support before sending.</p>
+            <?php endif; ?>
             <p id="payment-wallet" class="lead text-break"><?php echo htmlspecialchars($wallet_address, ENT_QUOTES, 'UTF-8'); ?></p>
             <button type="button" class="btn btn-outline-primary clipboard-init" data-clipboard-target="#payment-wallet">Copy wallet address</button>
         <?php else: ?>
