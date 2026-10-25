@@ -30,6 +30,17 @@ function set_my_session(){
 
 set_my_session();
 
+function admin_session_token($getadmin){
+    if(!$getadmin || empty($getadmin['code']) || empty($getadmin['password'])){
+        return '';
+    }
+    $secret = getenv('ADMIN_SESSION_SECRET');
+    if(!$secret){
+        $secret = hash('sha256', 'ruxfund-admin|'.(string) $getadmin['code'].'|'.(string) $getadmin['password']);
+    }
+    return hash_hmac('sha256', (string) $getadmin['code'].'|'.(string) $getadmin['password'], $secret);
+}
+
 require_once __DIR__ . '/mysqli_pgsql_compat.php';
 
 function getConnect(){

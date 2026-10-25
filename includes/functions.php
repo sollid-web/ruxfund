@@ -2313,17 +2313,6 @@ function login($con){
    exit;
 }
 
-function admin_session_token($getadmin){
-    if(!$getadmin || empty($getadmin['code']) || empty($getadmin['password'])){
-        return '';
-    }
-    $secret = getenv('ADMIN_SESSION_SECRET');
-    if(!$secret){
-        $secret = hash('sha256', 'ruxfund-admin|'.(string) $getadmin['code'].'|'.(string) $getadmin['password']);
-    }
-    return hash_hmac('sha256', (string) $getadmin['code'].'|'.(string) $getadmin['password'], $secret);
-}
-
 function register($con,$getsite){
     if(!isset($_POST['create'])){
         return;
