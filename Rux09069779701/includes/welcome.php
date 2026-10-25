@@ -1,6 +1,6 @@
 <div class="row">
                         </div>
-<?php if((time()-$_SESSION['time'])<6){?>
+<?php if(isset($_SESSION['time']) && (time()-$_SESSION['time'])<6){?>
                         <div class="row">
                             <div class="col-md-12">
                             <div class="alert text-center <?php echo $_SESSION["theme"];?> alert-dismissible fade show">

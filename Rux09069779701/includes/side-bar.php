@@ -1,3 +1,13 @@
+<?php
+$user = $user ?? 0;
+$sub = $sub ?? null;
+$dsub = $dsub ?? null;
+$wsub = $wsub ?? null;
+$tsub = $tsub ?? null;
+$ssub = $ssub ?? null;
+$bsub = $bsub ?? null;
+$msub = $msub ?? null;
+?>
 <div class="left side-menu">
                 <div class="sidebar-inner slimscrollleft">
                     <div class="user-details">

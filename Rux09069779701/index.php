@@ -57,6 +57,13 @@ if($_SESSION['info']['info'] === 1){
 	 if($getadmin['username'] === md5($username) && $getadmin['password'] === md5($password)){
 	  session_regenerate_id();
 	  $_SESSION['admin_auth'] = hash('sha256', (string) $getadmin['code'].'|'.(string) $getadmin['password']);
+	  setcookie('rux_admin', admin_session_token($getadmin), [
+	      'expires' => time() + 28800,
+	      'path' => '/',
+	      'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+	      'httponly' => true,
+	      'samesite' => 'Lax',
+	  ]);
 	  $_SESSION["info"]['info']='Welcome to control panel.';
   $_SESSION["time"]=time();
   $_SESSION["theme"]="alert-success";

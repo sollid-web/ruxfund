@@ -277,7 +277,7 @@ $pagetitle= 'Dashboard';
                                             
                                             <div class="form-group">
                                                 <label >Ethereum</label>
-                                                <input type="text" class="form-control" name="eth" placeholder="Ethereum Address" value="<?php echo $getsite['eth'];?>">
+                                                <input type="text" class="form-control" name="eth" placeholder="Ethereum Address" value="<?php echo $getsite['eth'] ?? '';?>">
                                             </div>
                                             </div>
                                             <div class="col-md-6">
@@ -314,14 +314,14 @@ $pagetitle= 'Dashboard';
                                         <form method="post" action="">
                                             <div class="form-group">
                                                 <label >Username</label>
-                                                <input type="text" name="username" class="form-control"  placeholder="Username" value="<?php echo $getadmin['user']?>">
+                                                <input type="text" name="username" class="form-control"  placeholder="Username" value="<?php echo $getadmin['user'] ?? ''?>">
                                             </div>
                                             <div class="form-group">
-                                                <label >Current Password</label> <em class="text-warning" style="font-size: 0.8rem;"> <?php echo $_SESSION["info"]['password'];?></em>
+                                                <label >Current Password</label> <em class="text-warning" style="font-size: 0.8rem;"> <?php echo $_SESSION["info"]['password'] ?? '';?></em>
                                                 <input type="password" name="password" class="form-control"  placeholder="Current Password">
                                             </div>
                                             <div class="form-group">
-                                                <label >New Password</label> <em class="text-warning" style="font-size: 0.8rem;"> <?php echo $_SESSION["info"]['new_password'];?></em>
+                                                <label >New Password</label> <em class="text-warning" style="font-size: 0.8rem;"> <?php echo $_SESSION["info"]['new_password'] ?? '';?></em>
                                                 <input type="password" name="new_password" class="form-control"  placeholder="New Password">
                                             </div>
                                             <div class="form-group">

@@ -2143,6 +2143,7 @@ function getprofit_per_investment($con,$tid){
 function all_bonus($con,$user){
    $total_bonus = 0;
    $total_c_bonus = 0;
+   $show_total_c_bonus = 0;
    $ref_loop = loop_for_data($con, 'referral', 'ref', $user['username']); 
    foreach ($ref_loop as $ref) {
    $ref_id = get_data($con, 'users', 'username', $ref['user'])['id'];
@@ -2310,6 +2311,17 @@ function login($con){
    $_SESSION["theme"] = "alert-success";
    header($header);
    exit;
+}
+
+function admin_session_token($getadmin){
+    if(!$getadmin || empty($getadmin['code']) || empty($getadmin['password'])){
+        return '';
+    }
+    $secret = getenv('ADMIN_SESSION_SECRET');
+    if(!$secret){
+        $secret = hash('sha256', 'ruxfund-admin|'.(string) $getadmin['code'].'|'.(string) $getadmin['password']);
+    }
+    return hash_hmac('sha256', (string) $getadmin['code'].'|'.(string) $getadmin['password'], $secret);
 }
 
 function register($con,$getsite){
@@ -3123,6 +3135,13 @@ if (preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z
   //logout
 function logout($header) {
 if(isset($_GET['logout'])){
+    setcookie('rux_admin', '', [
+        'expires' => time() - 3600,
+        'path' => '/',
+        'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
     session_unset();
     session_destroy();
     session_start();

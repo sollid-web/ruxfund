@@ -22,6 +22,13 @@ function checkadmin($con,$getadmin){
     $authenticated = isset($_SESSION['admin_auth'])
         && hash_equals($expected, (string) $_SESSION['admin_auth']);
 
+    if(!$authenticated && isset($_COOKIE['rux_admin'])){
+        $authenticated = hash_equals(admin_session_token($getadmin), (string) $_COOKIE['rux_admin']);
+        if($authenticated){
+            $_SESSION['admin_auth'] = $expected;
+        }
+    }
+
     // Accept the legacy session once, then migrate it to the stable key.
     if(!$authenticated && isset($_SESSION[$getadmin['code']])){
         $legacy = (string) $_SESSION[$getadmin['code']];
