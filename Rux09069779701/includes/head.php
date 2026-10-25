@@ -25,6 +25,7 @@
         
         <!-- Plugins css -->
         <link href="plugins/modal-effect/css/component.css" rel="stylesheet">
+        <link href="assets/css/rux-mobile.css?ver=20261025-mobile1" rel="stylesheet" />
 
         <script src="assets/js/modernizr.min.js"></script>
         <script src="assets/js/default.js"></script>

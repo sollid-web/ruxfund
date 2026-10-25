@@ -30,5 +30,5 @@
         data-n-css=""></noscript>
     <!-- import ends -->
     
-    <link rel="stylesheet" href="general.css?ver=28043" />
+    <link rel="stylesheet" href="general.css?ver=20261025-mobile1" />
 </head>

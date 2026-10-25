@@ -198,4 +198,5 @@ p {
 
 
         </style>
+    <link rel="stylesheet" href="assets/css/rux-mobile.css?ver=20261025-mobile1">
 </head>

@@ -119,6 +119,8 @@ foreach ($tranz as $transaction) {
                                                 <p class="text-soft mb-0">Completed and pending activity will appear here.</p>
                                             </div>
                                     <?php } else { ?>
+                                            <div class="rux-table-scroll" role="region" aria-label="Transaction records" tabindex="0">
+                                                <p class="rux-mobile-scroll-hint">Swipe horizontally to view all transaction columns.</p>
                                             <table class="datatable-init table">
                                                 <thead>
                                                     <tr>
@@ -221,6 +223,7 @@ foreach ($tranz as $transaction) {
                      ?>
                                                 </tbody>
                                             </table>
+                                            </div>
                                     <?php } ?>
                                         </div>
                                     </div><!-- .card-preview -->

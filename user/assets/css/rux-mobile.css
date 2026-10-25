@@ -1,0 +1,131 @@
+/* Mobile-first safeguards for the authenticated account area. */
+html,
+body {
+    width: 100%;
+    max-width: 100%;
+    min-width: 320px;
+}
+
+img,
+iframe,
+video,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+.nk-wrap,
+.nk-main,
+.nk-content,
+.nk-content-fluid,
+.content-page,
+.card,
+.card-inner,
+.row,
+[class*="col-"] {
+    min-width: 0;
+}
+
+.form-control,
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+
+.rux-table-scroll,
+.table-responsive,
+.dataTables_wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.rux-table-scroll table,
+.table-responsive table {
+    min-width: 600px;
+}
+
+.rux-mobile-scroll-hint {
+    display: none;
+}
+
+@media (max-width: 767px) {
+    .nk-content,
+    .nk-content-fluid {
+        padding-left: max(12px, env(safe-area-inset-left, 0px));
+        padding-right: max(12px, env(safe-area-inset-right, 0px));
+    }
+
+    .nk-content-header,
+    .nk-block-head,
+    .card-title-group,
+    .card-tools {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .card-inner {
+        padding: 1rem;
+    }
+
+    .rux-mobile-scroll-hint {
+        display: block;
+        margin: 0 0 0.5rem;
+        color: #8094ae;
+        font-size: 0.75rem;
+    }
+
+    .modal-dialog {
+        width: calc(100vw - 24px);
+        max-width: 520px;
+        margin: 12px auto;
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #smartsupp-widget-container > div:has(> iframe#widgetMessengerFrame) {
+        position: fixed !important;
+        top: auto !important;
+        left: auto !important;
+        right: max(12px, env(safe-area-inset-right, 0px)) !important;
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+        width: min(80vw, 360px) !important;
+        min-width: min(280px, calc(100vw - 24px)) !important;
+        max-width: calc(100vw - 24px) !important;
+        height: min(68vh, 560px) !important;
+        height: min(68dvh, 560px) !important;
+        max-height: calc(100vh - 110px) !important;
+        max-height: calc(100dvh - 110px) !important;
+        border-radius: 16px !important;
+    }
+
+    #smartsupp-widget-container > div:has(> iframe#widgetMessengerFrame) > iframe#widgetMessengerFrame {
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .nk-content,
+    .nk-content-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .card-inner {
+        padding: 0.875rem;
+    }
+
+    .modal-dialog {
+        width: calc(100vw - 16px);
+        margin: 8px auto;
+    }
+}

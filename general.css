@@ -3,7 +3,7 @@
 html,
 body {
     max-width: 100%;
-    overflow-x: hidden;
+    width: 100%;
 }
 
 img,
@@ -14,6 +14,10 @@ canvas {
 }
 
 .rux-mobile-menu-toggle {
+    display: none;
+}
+
+.rux-mobile-only {
     display: none;
 }
 
@@ -125,6 +129,10 @@ canvas {
         display: none;
     }
 
+    #rux-mobile-nav .rux-mobile-only {
+        display: block;
+    }
+
     .container,
     .container-fluid {
         width: 100%;
@@ -159,6 +167,31 @@ canvas {
     iframe[src*="coinlib"] {
         width: 100% !important;
         min-height: 180px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    /* Keep the Smartsupp panel as a floating side card on phones. The external
+       chat content stays in its own iframe; only the host-side frame is sized. */
+    #smartsupp-widget-container > div:has(> iframe#widgetMessengerFrame) {
+        position: fixed !important;
+        top: auto !important;
+        left: auto !important;
+        right: max(12px, env(safe-area-inset-right, 0px)) !important;
+        bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+        width: min(80vw, 360px) !important;
+        min-width: min(280px, calc(100vw - 24px)) !important;
+        max-width: calc(100vw - 24px) !important;
+        height: min(68vh, 560px) !important;
+        height: min(68dvh, 560px) !important;
+        max-height: calc(100vh - 110px) !important;
+        max-height: calc(100dvh - 110px) !important;
+        border-radius: 16px !important;
+    }
+
+    #smartsupp-widget-container > div:has(> iframe#widgetMessengerFrame) > iframe#widgetMessengerFrame {
+        width: 100% !important;
+        height: 100% !important;
     }
 }
 

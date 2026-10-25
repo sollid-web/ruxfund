@@ -42,6 +42,7 @@
                             <li id="menu-item-674"
                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-674"><a
                                     href="auth/login.php">Login</a></li>
+                            <li class="menu-item rux-mobile-only"><a href="auth/signup.php">Create account</a></li>
                         </ul>
 
                     </nav>
@@ -59,10 +60,24 @@
         var toggle = document.querySelector('.rux-mobile-menu-toggle');
         var nav = document.getElementById('rux-mobile-nav');
         if (!toggle || !nav) return;
+        var mobileMenu = window.matchMedia('(max-width: 991px)');
         toggle.addEventListener('click', function () {
             var isOpen = toggle.getAttribute('aria-expanded') === 'true';
             toggle.setAttribute('aria-expanded', String(!isOpen));
             nav.classList.toggle('rux-mobile-nav-open', !isOpen);
+        });
+        nav.addEventListener('click', function (event) {
+            if (mobileMenu.matches && event.target.closest('a')) toggle.click();
+        });
+        document.addEventListener('click', function (event) {
+            if (mobileMenu.matches && toggle.getAttribute('aria-expanded') === 'true' &&
+                !toggle.contains(event.target) && !nav.contains(event.target)) toggle.click();
+        });
+        document.addEventListener('keydown', function (event) {
+            if (mobileMenu.matches && event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+                toggle.click();
+                toggle.focus();
+            }
         });
     }());
 </script>
