@@ -54,10 +54,10 @@ if(!$getadmin || !hash_equals((string) $getadmin['code'], (string) clean_complex
 
 if($_SESSION['info']['info'] === 1){
  
- if($getadmin['username'] === md5($username) && $getadmin['password'] === md5($password)){
-  session_regenerate_id();
-  $_SESSION[$getadmin['code']]= $password;
-  $_SESSION["info"]['info']='Welcome to control panel.';
+	 if($getadmin['username'] === md5($username) && $getadmin['password'] === md5($password)){
+	  session_regenerate_id();
+	  $_SESSION['admin_auth'] = hash('sha256', (string) $getadmin['code'].'|'.(string) $getadmin['password']);
+	  $_SESSION["info"]['info']='Welcome to control panel.';
   $_SESSION["time"]=time();
   $_SESSION["theme"]="alert-success";
   header('location: flower.php');   

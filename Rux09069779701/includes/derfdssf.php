@@ -13,19 +13,31 @@ return $data;
 $getadmin = get_data_r($con, 'flow', 'id', 1);
 
 function checkadmin($con,$getadmin){
-    if(!isset($_SESSION[$getadmin['code']]) || strlen($_SESSION[$getadmin['code']]) > 12 || md5($_SESSION[$getadmin['code']]) !== $getadmin['password']){
+    if(!$getadmin){
+        header('location: index.php');
+        exit;
+    }
+
+    $expected = hash('sha256', (string) $getadmin['code'].'|'.(string) $getadmin['password']);
+    $authenticated = isset($_SESSION['admin_auth'])
+        && hash_equals($expected, (string) $_SESSION['admin_auth']);
+
+    // Accept the legacy session once, then migrate it to the stable key.
+    if(!$authenticated && isset($_SESSION[$getadmin['code']])){
+        $legacy = (string) $_SESSION[$getadmin['code']];
+        $authenticated = strlen($legacy) <= 12 && hash_equals($getadmin['password'], md5($legacy));
+        if($authenticated){
+            $_SESSION['admin_auth'] = $expected;
+            unset($_SESSION[$getadmin['code']]);
+        }
+    }
+
+    if(!$authenticated){
      $_SESSION["info"]['info']='Please login to continue tah.';
      $_SESSION["theme"]="alert-warning";
      $_SESSION["time"]=time();
-     header('location: index.php');   
-    }else{
-        $testadmin = get_data_r($con, 'flow', 'password', md5($_SESSION[$getadmin['code']]));
-        if($testadmin === FALSE){
-          $_SESSION["info"]['info']='Please login to continue toooo.';
-          $_SESSION["theme"]="alert-warning";
-          $_SESSION["time"]=time();
-          header('location: index.php');  
-        }
+     header('location: index.php');
+     exit;
     }
 }
 checkadmin($con,$getadmin);

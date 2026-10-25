@@ -2302,6 +2302,7 @@ function login($con){
        exit;
    }
 
+   session_regenerate_id(true);
    $_SESSION["info"]['info'] = 'Welcome, '.$username.'';
    $_SESSION['user'] = $username;
    $_SESSION['pif'] = 1;
@@ -2587,26 +2588,37 @@ echo 'Send Payment To : ' . $object->address;
 }
 
 function convert_to_btc($currency,$amount){
-  if((time() - $_SESSION['time_to_btc']) < 1800){
-     $rate =  $_SESSION['to_btc'];
-     $btc = $amount/$rate;
-  }else{
-     unset($_SESSION['time_to_btc']);
-     unset($_SESSION['to_btc']);
-     $rate = get_btc_rate($currency, $amount);
-     $btc = $amount/$rate;
+  $amount = (float) $amount;
+  if ($amount <= 0) {
+      return 0.0;
   }
-  return $btc;
-}
 
+  $rate = 0.0;
+  if (isset($_SESSION['btc_rate'], $_SESSION['btc_rate_time'])
+      && (time() - (int) $_SESSION['btc_rate_time']) < 1800) {
+      $rate = (float) $_SESSION['btc_rate'];
+  }
+
+  if ($rate <= 0) {
+      $rate = (float) get_btc_rate($currency, $amount);
+  }
+
+  if ($rate <= 0) {
+      error_log('Unable to convert amount to BTC: no valid '.$currency.' rate.');
+      return 0.0;
+  }
+
+  return $amount / $rate;
+}
 function get_btc_rate($currency,$amount){
-  $convert =   file_get_contents("https://blockchain.info/ticker");
-  $json = json_decode($convert,TRUE);
-  $rate = $json[$currency]['last'];
-  $btc = $amount * $rate;
-  $_SESSION['to_btc'] = $btc;
-  $_SESSION['time_to_btc'] = time();
-  return $btc;
+  $convert = @file_get_contents("https://blockchain.info/ticker");
+  $json = is_string($convert) ? json_decode($convert, TRUE) : null;
+  $rate = isset($json[$currency]['last']) ? (float) $json[$currency]['last'] : 0.0;
+  if ($rate > 0) {
+      $_SESSION['btc_rate'] = $rate;
+      $_SESSION['btc_rate_time'] = time();
+  }
+  return $rate;
 }
 
 

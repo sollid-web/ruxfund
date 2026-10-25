@@ -12,14 +12,16 @@ function set_my_session(){
         'httponly' => true,
         'samesite' => 'Lax',
     ]);
+    ini_set('session.use_only_cookies', '1');
+    ini_set('session.use_trans_sid', '0');
     ini_set('session.use_strict_mode', '1');
-    session_start();
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
     date_default_timezone_set('Africa/Lagos');
 
     if (isset($_SESSION['monitor']) && time() - $_SESSION['monitor'] > 3600) {
         $_SESSION = [];
-        session_regenerate_id(true);
-    } elseif (!isset($_SESSION['monitor'])) {
         session_regenerate_id(true);
     }
 
