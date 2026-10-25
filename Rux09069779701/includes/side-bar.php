@@ -77,6 +77,7 @@
                                     <li class="<?php if($ssub === 3){ echo 'active';}?>"><a href="setting.php?a=3">Add FAQs</a></li>
                                     <li class="<?php if($ssub === 4){ echo 'active';}?>"><a href="setting.php?a=4">Set Deposit/Withdrawal Charges</a></li>
                                     <li class="<?php if($ssub === 5){ echo 'active';}?>"><a href="setting.php?a=5">Extra Statistics</a></li>
+                                    <li class="<?php if($ssub === 6){ echo 'active';}?>"><a href="payment-methods.php">Payment Methods</a></li>
                                 </ul>
                             </li>
                             

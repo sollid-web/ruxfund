@@ -42,6 +42,8 @@ No verified live application URL was found in the repository or project metadata
 - FAQ/testimonial content management
 - Admin dashboard and admin login flow
 - PostgreSQL/Supabase schema and migration guidance
+- Public and account-level investment plan navigation backed by the `plan` table
+- Deposit selection and payment-instruction flow backed by configured `sitewallet` records
 
 ### Partially implemented or unclear
 
@@ -55,6 +57,10 @@ No verified live application URL was found in the repository or project metadata
 - Real audit trail and compliance tooling
 - Full automated testing pipeline
 - Production deployment or monitoring setup
+
+### Optional production integrations
+
+Set `SMARTSUPP_KEY` in the Wasmer application environment to enable the Smartsupp live-chat loader. The integration is intentionally disabled when the key is absent; no demo chat account or hard-coded third-party key is included.
 
 ## Technology stack
 

@@ -45,8 +45,8 @@ if(validate_username($username) === FALSE){
                 header('location: '.$_SERVER["PHP_SELF"]); 
 }
 
-if(clean_complex_para($code) !== $getadmin['code']){
-   $_SESSION["info"]['info']= clean_complex_para($code).'<br>'.$getadmin['code'];
+if(!$getadmin || !hash_equals((string) $getadmin['code'], (string) clean_complex_para($code))){
+   $_SESSION["info"]['info']= 'Login Failed, invalid security code.';
                 $_SESSION["time"]=time();
                 $_SESSION["theme"]="alert-warning";
                 header('location: '.$_SERVER["PHP_SELF"]); 
@@ -101,7 +101,7 @@ $pagetitle= 'Admin Login';
                                                 <input type="text" class="form-control" name="username" placeholder="Username">
                                             </div>
                                             <div class="form-group">
-                                                <input type="text" class="form-control" name="password" placeholder="Password">
+                                                <input type="password" class="form-control" name="password" placeholder="Password" autocomplete="current-password">
                                             </div>
                                             <input type="hidden" name="code" value="<?php echo complex_para($getadmin['code'])?>">
                                             <button type="submit" name="log_ad" class="btn btn-primary waves-effect waves-light">Login</button>

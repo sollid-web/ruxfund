@@ -7,9 +7,9 @@ class BankingPageTests(unittest.TestCase):
         deposit_file = pathlib.Path(__file__).resolve().parents[1] / "user" / "deposit.php"
         content = deposit_file.read_text(encoding="utf-8")
 
-        self.assertIn("$plan = $_GET['plan'] ?? null;", content)
+        self.assertIn("$plan_id = filter_input(INPUT_GET, 'plan', FILTER_VALIDATE_INT);", content)
         self.assertIn("if ($con) {", content)
-        self.assertIn("deposit($con, $getuser['id'] ?? 0);", content)
+        self.assertIn("deposit($con, (int) $getuser['id']);", content)
 
     def test_withdraw_page_handles_missing_database_connection(self):
         withdraw_file = pathlib.Path(__file__).resolve().parents[1] / "user" / "withdraw.php"

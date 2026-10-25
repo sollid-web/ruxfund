@@ -24,6 +24,7 @@
                            <li id="menu-item-674"
                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-674"><a
                                     href="service.php">Our Services</a></li>
+                            <li class="menu-item"><a href="plans.php">Investment Plans</a></li>
                             
                         </ul>
                         <div class="tb-site-branding"> <a href="index.php" class="tb-custom-logo-link tb-logo"><img

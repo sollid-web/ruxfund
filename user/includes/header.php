@@ -36,8 +36,11 @@
                                         </li><!-- .nk-menu-item -->
                                     </ul><!-- .nk-menu-sub -->
                                 </li><!-- .nk-menu-item -->
-                                <li class="">
+                                        <li class="">
                                             <a href="deposit.php" class="nk-menu-link"><span class="nk-menu-text">Deposit</span></a>
+                                        </li>
+                                        <li class="">
+                                            <a href="plan.php" class="nk-menu-link"><span class="nk-menu-text">Investment Plans</span></a>
                                         </li>
                                         <li class="">
                                             <a href="withdraw.php" class="nk-menu-link"><span class="nk-menu-text">Withdrawal</span></a>

@@ -1665,9 +1665,20 @@ function withdraw_m($con,$getsite){
     }
 
     if(isset($_POST['withdraw_m'])){
-        $name=$_POST['name'];
-        $amount=$_POST['amount'];
-        $sender=$_POST['id'];
+        $name=trim($_POST['name'] ?? '');
+        $amount=filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
+        $sender=filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
+        $sender_user = $sender ? get_data($con, 'users', 'id', $sender) : false;
+        if (!$sender_user || (int) ($sender_user['kyc'] ?? 0) !== 1) {
+            set_flash_message('Withdrawals require approved KYC verification before funds can be released.');
+            header('location: '.$_SERVER['PHP_SELF']);
+            exit;
+        }
+        if ($amount === false || $amount === null || $amount <= 0) {
+            set_flash_message('Withdrawal amount must be greater than zero.');
+            header('location: '.$_SERVER['PHP_SELF']);
+            exit;
+        }
         $oneday = time() - 86400;
         $t_d_withdraw = total_btwn_user($con, 'Withdraw', 'time', $oneday, time(), $sender);
         $max = get_data($con, 'users', 'id', $sender)['max'];
@@ -1676,8 +1687,8 @@ function withdraw_m($con,$getsite){
         $t_amount = $amount + $w_charge;
         $_SESSION["info"] = array('info'=>1,'name'=>'','amount'=>'');
         
-        if(strlen($amount)<1 ||  strlen($name)<1){
-            if(strlen($amount)<1){
+        if($amount === false || $amount === null || $amount <= 0 || strlen($name)<1){
+            if($amount === false || $amount === null || $amount <= 0){
             $_SESSION["info"]['amount']='Amount is required';
             $_SESSION["info"]['info']='Transfer Failed, Amount is required.';
             }
@@ -1773,13 +1784,13 @@ function deposit($con,$sender){
     }
 
     if(isset($_POST['invest'])){
-        $plan = $_POST['plan'];
-        $amount = $_POST['amount'];
-        $paidby = $_POST['by'];
-        $coin = $_POST['coin'];
+        $plan = filter_input(INPUT_POST, 'plan', FILTER_VALIDATE_INT);
+        $amount = filter_input(INPUT_POST, 'amount', FILTER_VALIDATE_FLOAT);
+        $paidby = filter_input(INPUT_POST, 'by', FILTER_VALIDATE_INT);
+        $coin = strtoupper(trim($_POST['coin'] ?? ''));
         $_SESSION["info"] = array('info'=>1,'plan'=>'','amount'=>'');
         
-        if(empty($plan) || empty($amount) || empty($sender)){
+        if(empty($plan) || $amount === false || $amount === null || $amount <= 0 || !in_array($paidby, [1, 2], true) || !in_array($coin, ['BTC', 'ETH', 'USDT'], true) || empty($sender)){
          $_SESSION["info"]['info']= 'Every field is required';
          $_SESSION["time"]=time();
          $_SESSION["theme"]="alert-warning";
@@ -1954,8 +1965,10 @@ function getbal($con,$user){
     $credit = 0;
     $totaldebit = 0;
     $totalcredit = 0;
+    $t_charge = 0;
     $profit = 0;
     $totalprofit = 0;
+    $t_totalprofit = 0;
     $transaction = loop_for_double_data_or($con,'transaction','receiver',$user,'sender',$user);
     foreach($transaction as $gettrns){
         if($gettrns['receiver'] == $user && $gettrns['status']== 1){
@@ -2099,8 +2112,7 @@ function all_bonus($con,$user){
            $show_amount = $c_bonus['amount'];
            $show_total_c_bonus += $show_amount;
        }
-   $amount = $c_bonus['amount'];
-   $total_c_bonus += $amount;
+       $total_c_bonus += $c_bonus['amount'];
    }
    
    $t_bonus = $total_bonus + $total_c_bonus;
@@ -2338,7 +2350,7 @@ function register($con,$getsite){
     }
 
     $time = time();
-    $wd = md5($password);
+    $wd = password_hash($password, PASSWORD_DEFAULT);
     $array = array('username'=>$username,'password'=>$wd,'email'=>$email,'country'=>$country,'time'=>$time,'active'=>1,'transfer'=>0);
     $create = insert_data($con, 'users', $array);
 
