@@ -1068,41 +1068,37 @@ header($header);
 }
 
 function smart_amount($data){
-  if($data < 100000){
-     $data = number_format($data,2); 
+  $amount = (float) $data;
+  if($amount < 1000){
+     return number_format($amount, 2);
   }
-  if($data >= 100000 && $data < 999999){
-     $data = number_format($data/1000,1).' K'; 
+  if($amount < 1000000){
+     return number_format($amount / 1000, 1).' K';
   }
-  if($data >= 1000000 && $data < 999999999){
-     $data = number_format($data/1000000,1).' M'; 
+  if($amount < 1000000000){
+     return number_format($amount / 1000000, 1).' M';
   }
-  if($data >= 1000000000 && $data < 999999999999){
-     $data = number_format($data/1000000000,1).' B'; 
+  if($amount < 1000000000000){
+     return number_format($amount / 1000000000, 1).' B';
   }
-  if($data >= 1000000000000 && $data < 999999999999999){
-     $data = number_format($data/1000000000000,1).' Tr'; 
-  }
-  return $data;  
+  return number_format($amount / 1000000000000, 1).' Tr';
 }
 
 function smart_num($data){
-  if($data < 1000){
-     $data = $data; 
+  $number = (float) $data;
+  if($number < 1000){
+     return $data;
   }
-  if($data >= 1000 && $data < 999999){
-     $data = floor($data/1000).' K'; 
+  if($number < 1000000){
+     return floor($number / 1000).' K';
   }
-  if($data >= 1000000 && $data < 999999999){
-     $data = floor($data/1000000).' M'; 
+  if($number < 1000000000){
+     return floor($number / 1000000).' M';
   }
-  if($data >= 1000000000 && $data < 999999999999){
-     $data = floor($data/1000000000).' B'; 
+  if($number < 1000000000000){
+     return floor($number / 1000000000).' B';
   }
-  if($data >= 1000000000000 && $data < 999999999999999){
-     $data = floor($data/1000000000000).' Tr'; 
-  }
-  return $data;  
+  return floor($number / 1000000000000).' Tr';
 }
 
 function total_deposit($con,$column,$data){
