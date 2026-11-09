@@ -49,6 +49,7 @@ $pagename = 'Deposit';
     <div class="nk-block-head nk-block-head-lg wide-md">
         <div class="nk-block-head-sub"><span>Investment</span></div>
         <h2 class="nk-block-title fw-normal"><?php echo htmlspecialchars($plan_details['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
+        <p class="text-soft"><?php echo htmlspecialchars($plan_details['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
         <p class="text-soft">Invest between $<?php echo number_format((float) $plan_details['min'], 2); ?> and $<?php echo number_format((float) $plan_details['max'], 2); ?>.</p>
     </div>
     <div class="col-lg-6"><div class="card card-bordered"><div class="card-inner">

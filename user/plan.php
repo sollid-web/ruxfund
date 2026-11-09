@@ -58,6 +58,7 @@ $pagename = 'Plans';
                                                 <div class="pricing-title">
                                                     <h4 class="card-title title"><?php echo $plans['name'];?></h4>
                                                     <p class="sub-text text-<?php echo type_of_plan($plans['type'])['color']?>"><?php echo type_of_plan($plans['type'])['name']?></p>
+                                                    <p class="text-soft"><?php echo htmlspecialchars($plans['description'] ?? '', ENT_QUOTES, 'UTF-8');?></p>
                                                 </div>
                                                 <div class="card-text">
                                                     <div class="row">

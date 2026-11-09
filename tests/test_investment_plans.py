@@ -16,7 +16,7 @@ class InvestmentPlanConfigurationTests(unittest.TestCase):
     def assert_plan_rows(self, content):
         for name, (percent, ref, minimum, maximum, duration, interval) in EXPECTED.items():
             pattern = (
-                rf"SELECT 1, '{name}', {percent:.4f}, {ref:.4f}, "
+                rf"SELECT 1, '{name}', (?:'[^']+', )?{percent:.4f}, {ref:.4f}, "
                 rf"{minimum:.2f}, {maximum:.2f}, {duration}, {interval}"
             )
             self.assertRegex(content, pattern)
@@ -24,10 +24,26 @@ class InvestmentPlanConfigurationTests(unittest.TestCase):
     def test_postgres_and_mysql_schemas_seed_all_new_plans_and_keep_starter(self):
         postgres = self.read("supabase_schema.sql")
         mysql = self.read("schema.sql")
+        self.assertIn("description", postgres)
+        self.assertIn("description", mysql)
         self.assert_plan_rows(postgres)
         self.assert_plan_rows(mysql)
-        self.assertIn("SELECT 1, 'Starter', 2.0000, 10.0000, 200.00, 1999.00, 7, 24", postgres)
-        self.assertIn("SELECT 1, 'Starter', 2.0000, 10.0000, 200.00, 1999.00, 7, 24", mysql)
+        self.assertIn("SELECT 1, 'Starter', 'Low risk introduction', 2.0000, 10.0000, 200.00, 1999.00, 7, 24", postgres)
+        self.assertIn("SELECT 1, 'Starter', 'Low risk introduction', 2.0000, 10.0000, 200.00, 1999.00, 7, 24", mysql)
+        for content in [postgres, mysql]:
+            self.assertIn("Low risk introduction", content)
+            self.assertIn("Medium-Term Growth", content)
+            self.assertIn("Substantial Capital growth", content)
+            self.assertIn("Exclusive for High Stake investors", content)
+
+    def test_plan_descriptions_have_idempotent_migrations_and_admin_crud(self):
+        postgres = self.read("migrations/postgresql/20261109_add_plan_descriptions.sql")
+        mysql = self.read("migrations/mysql/20261109_add_plan_descriptions.sql")
+        functions = self.read("includes/functions.php")
+        self.assertIn("ADD COLUMN IF NOT EXISTS description", postgres)
+        self.assertIn("INFORMATION_SCHEMA.COLUMNS", mysql)
+        self.assertIn("description", functions[functions.index("function create_plan"):functions.index("function plan_day")])
+        self.assertIn("description", functions[functions.index("function update_plan"):functions.index("function stats")])
 
     def test_existing_database_plan_migrations_are_idempotent(self):
         postgres = self.read("migrations/postgresql/20261025_add_growth_pro_elite_plans.sql")
@@ -66,6 +82,8 @@ class InvestmentPlanConfigurationTests(unittest.TestCase):
         self.assertIn("Investment plan total returns", dashboard)
         self.assertIn("Total return / duration", admin)
         self.assertIn("Total return for full term (%)", admin_editor)
+        for content in [home, public, user_catalog, dashboard, admin, admin_editor]:
+            self.assertIn("description", content)
 
     def test_roi_is_linear_and_capped_at_term_maturity(self):
         functions = self.read("includes/functions.php")

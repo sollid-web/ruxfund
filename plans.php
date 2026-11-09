@@ -23,6 +23,7 @@ $plans = $con ? loop_table_DESC($con, 'plan', 200) : false;
                     <div class="card-body">
                         <h2 class="h4"><?php echo htmlspecialchars($plan['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
                         <p class="text-muted"><?php echo htmlspecialchars(type_of_plan($plan['type'])['name'], ENT_QUOTES, 'UTF-8'); ?></p>
+                        <p class="mb-3"><?php echo htmlspecialchars($plan['description'] ?? '', ENT_QUOTES, 'UTF-8'); ?></p>
                         <dl>
                             <dt>Minimum deposit</dt><dd>$<?php echo number_format((float) $plan['min'], 2); ?></dd>
                             <dt>Maximum deposit</dt><dd>$<?php echo number_format((float) $plan['max'], 2); ?></dd>

@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `plan` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `type` tinyint NOT NULL DEFAULT 1,
   `name` varchar(150) NOT NULL,
+  `description` varchar(255) NOT NULL DEFAULT '',
   `percent` decimal(12,4) NOT NULL DEFAULT 0,
   `ref` decimal(12,4) NOT NULL DEFAULT 0,
   `min` decimal(12,2) NOT NULL DEFAULT 10,
@@ -176,17 +177,17 @@ INSERT INTO `fak` (`id`, `users`, `deposit`, `withdraw`, `days`)
 VALUES (1, 0, 0, 0, 0)
 ON DUPLICATE KEY UPDATE `id` = `id`;
 
-INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Starter', 2.0000, 10.0000, 200.00, 1999.00, 7, 24
+INSERT INTO `plan` (`type`, `name`, `description`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
+SELECT 1, 'Starter', 'Low risk introduction', 2.0000, 10.0000, 200.00, 1999.00, 7, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` LIMIT 1);
-INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Growth', 3.0000, 10.0000, 2000.00, 9999.00, 14, 24
+INSERT INTO `plan` (`type`, `name`, `description`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
+SELECT 1, 'Growth', 'Medium-Term Growth', 3.0000, 10.0000, 2000.00, 9999.00, 14, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Growth'));
-INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Pro', 3.5000, 10.0000, 10000.00, 19999.00, 21, 24
+INSERT INTO `plan` (`type`, `name`, `description`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
+SELECT 1, 'Pro', 'Substantial Capital growth', 3.5000, 10.0000, 10000.00, 19999.00, 21, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Pro'));
-INSERT INTO `plan` (`type`, `name`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
-SELECT 1, 'Elite', 5.0000, 10.0000, 20000.00, 100000.00, 30, 24
+INSERT INTO `plan` (`type`, `name`, `description`, `percent`, `ref`, `min`, `max`, `num`, `calc`)
+SELECT 1, 'Elite', 'Exclusive for High Stake investors', 5.0000, 10.0000, 20000.00, 100000.00, 30, 24
 WHERE NOT EXISTS (SELECT 1 FROM `plan` WHERE LOWER(`name`) = LOWER('Elite'));
 
 INSERT INTO `sitewallet` (`type`, `address`)

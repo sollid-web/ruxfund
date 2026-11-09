@@ -1384,6 +1384,7 @@ $plan_page = 1;
                                                                     <h5
                                                                         class="card-title text-muted text-uppercase text-center">
                                                                         <?php echo $plans['name'];?></h5>
+                                                                    <p class="text-center text-muted mb-2"><?php echo htmlspecialchars($plans['description'] ?? '', ENT_QUOTES, 'UTF-8');?></p>
                                                                     <h6 class="card-price text-center"><?php echo number_format((float)($plans['percent'] ?? 0), 4);?>%<span
                                                                             class="period">/Full term</span></h6>
                                                                     <hr>

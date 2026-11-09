@@ -142,6 +142,12 @@ $activemenu=6;
                                                 <input type="text" class="form-control" name="name" placeholder="Name Of Plan">
                                             </div>
                                             </div>
+                                            <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea class="form-control" name="description" maxlength="255" placeholder="Plan description"></textarea>
+                                            </div>
+                                            </div>
                                             <div class="col-md-6">
                                             
                                             <div class="form-group">
@@ -219,6 +225,7 @@ $activemenu=6;
                                                         <tr>
                                                             <th>SN</th>
                                                             <th>Name</th>
+                                                            <th>Description</th>
                                                             <th>Min</th>
                                                             <th>Max</th>
                                                             <th>Ref</th>
@@ -237,6 +244,7 @@ $activemenu=6;
                                                             <td><?php echo $sn;?></td>
                                                             
                                                             <td><?php echo $dep_d['name'];?></td>
+                                                            <td><?php echo htmlspecialchars($dep_d['description'] ?? '', ENT_QUOTES, 'UTF-8');?></td>
                                                             <td><?php echo '$ '.smart_amount($dep_d['min']);?></td>
                                                             <td><?php echo '$ '.smart_amount($dep_d['max']);?></td>
                                                             <td><?php echo $dep_d['ref'].' %';?></td>

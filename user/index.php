@@ -247,6 +247,7 @@ $num_rows_trans = loop_for_double_data_or_show($con, 'transaction', 'sender', $g
                                                     <div class="progress-wrap">
                                                         <div class="progress-text">
                                                             <div class="progress-label"><?php echo $plans['name'];?></div>
+                                                            <div class="text-soft small"><?php echo htmlspecialchars($plans['description'] ?? '', ENT_QUOTES, 'UTF-8');?></div>
                                                             <div class="progress-amount"><?php echo number_format((float)$plans['percent'], 4);?>% total</div>
                                                         </div>
                                                         <div class="progress progress-md">

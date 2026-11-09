@@ -776,6 +776,7 @@ function create_plan($con){
     if(isset($_POST['create_plan'])){
         $type = test_input($_POST['type']);
         $name = test_input($_POST['name']);
+        $description = test_input($_POST['description'] ?? '');
         $min = test_input($_POST['min']);
         $max = test_input($_POST['max']);
         $ref = test_input($_POST['ref']);
@@ -791,7 +792,7 @@ function create_plan($con){
         header('location: '.$_SERVER["PHP_SELF"].'?a=1');    
         }
         
-        if(empty($name) || empty($min) || empty($max) || empty($ref) || empty($profit) || empty($num) || empty($calc) || empty($type)){
+        if(empty($name) || empty($description) || empty($min) || empty($max) || empty($ref) || empty($profit) || empty($num) || empty($calc) || empty($type)){
         $_SESSION["info"]['info']='Failed to insert, every field is required.';
         $_SESSION["time"]=time();
         $_SESSION["theme"]="alert-warning";
@@ -806,7 +807,7 @@ function create_plan($con){
         }
         
         if($_SESSION['info']['info'] === 1){
-        $array = array('type'=>$type,'name'=>$name,'percent'=>$profit,'ref'=>$ref,'min'=>$min,'max'=>$max,'num'=>$num,'calc'=>$calc); 
+        $array = array('type'=>$type,'name'=>$name,'description'=>$description,'percent'=>$profit,'ref'=>$ref,'min'=>$min,'max'=>$max,'num'=>$num,'calc'=>$calc);
         $insert = insert_data($con, 'plan', $array);
         if($insert === TRUE){
         $_SESSION["info"]['info']='Successful, you have created '.$name.' plan.';
@@ -872,6 +873,7 @@ function update_plan($con){
     if(isset($_POST['update_plan'])){
         $type = test_input($_POST['type']);
         $name = test_input($_POST['name']);
+        $description = test_input($_POST['description'] ?? '');
         $min = test_input($_POST['min']);
         $max = test_input($_POST['max']);
         $ref = test_input($_POST['ref']);
@@ -888,7 +890,7 @@ function update_plan($con){
         header('location: '.$_SERVER["PHP_SELF"].'?a=1');    
         }
         
-        if(empty($name) || empty($min) || empty($max) || empty($ref) || empty($profit) || empty($num) || empty($calc) || empty($data) || empty($type)){
+        if(empty($name) || empty($description) || empty($min) || empty($max) || empty($ref) || empty($profit) || empty($num) || empty($calc) || empty($data) || empty($type)){
         $_SESSION["info"]['info']='Failed to update, every field is required.';
         $_SESSION["time"]=time();
         $_SESSION["theme"]="alert-warning";
@@ -903,7 +905,7 @@ function update_plan($con){
         }
         
         if($_SESSION['info']['info'] === 1){
-        $array = array('type'=>$type,'name'=>$name,'percent'=>$profit,'ref'=>$ref,'min'=>$min,'max'=>$max,'num'=>$num,'calc'=>$calc); 
+        $array = array('type'=>$type,'name'=>$name,'description'=>$description,'percent'=>$profit,'ref'=>$ref,'min'=>$min,'max'=>$max,'num'=>$num,'calc'=>$calc);
         $update = update_data($con, 'plan', $array, 'id', $data);
         if($update === TRUE){
         $_SESSION["info"]['info']='Successful, you have updated '.$name.' plan.';

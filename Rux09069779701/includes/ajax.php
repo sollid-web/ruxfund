@@ -261,6 +261,12 @@ if (! empty($_POST["setting_id"]) && ! empty($_POST["item"])) {
                                                 <input type="text" class="form-control" name="name" placeholder="Name Of Plan" value="<?php echo $dep_d['name'];?>">
                                             </div>
                                             </div>
+                                            <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label>Description</label>
+                                                <textarea class="form-control" name="description" maxlength="255" placeholder="Plan description"><?php echo htmlspecialchars($dep_d['description'] ?? '', ENT_QUOTES, 'UTF-8');?></textarea>
+                                            </div>
+                                            </div>
                                             <div class="col-md-6">
                                             
                                             <div class="form-group">
