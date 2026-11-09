@@ -45,6 +45,14 @@ button {
 }
 
 @media (max-width: 767px) {
+    .topbar {
+        z-index: 1100;
+    }
+
+    .topbar .topbar-left {
+        width: 56px;
+    }
+
     .content-page {
         margin-left: 0 !important;
         width: 100%;
@@ -54,6 +62,62 @@ button {
     .content-page > .content {
         margin-top: 58px;
         padding: 14px 10px 20px;
+    }
+
+    /* Use the existing hamburger as an off-canvas drawer on phones. */
+    .side-menu.left {
+        bottom: 0;
+        height: calc(100vh - 70px);
+        height: calc(100dvh - 70px);
+        left: -250px;
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        position: fixed;
+        top: 70px;
+        transform: translateX(0);
+        transition: left .2s ease-in-out;
+        width: 240px;
+        z-index: 1050;
+    }
+
+    #wrapper.enlarged .side-menu.left {
+        left: 0;
+        padding-top: 0;
+        width: 240px;
+    }
+
+    .side-menu.left .sidebar-inner {
+        height: 100%;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* The drawer must never inherit the desktop collapsed-sidebar rules. */
+    #wrapper.enlarged .side-menu.left #sidebar-menu > ul > li > a {
+        min-height: 0;
+        padding: 15px 25px;
+    }
+
+    #wrapper.enlarged .side-menu.left #sidebar-menu > ul > li > a > span,
+    #wrapper.enlarged .side-menu.left span.pull-right {
+        display: inline;
+    }
+
+    #wrapper.enlarged .side-menu.left #sidebar-menu ul ul {
+        box-shadow: none;
+        display: none;
+        position: static;
+        width: auto;
+    }
+
+    #wrapper.enlarged .side-menu.left #sidebar-menu ul > li > ul a {
+        padding-left: 65px;
+        width: auto;
+    }
+
+    #wrapper.enlarged .side-menu.left #sidebar-menu a:hover {
+        width: auto;
     }
 
     .page-title-box,

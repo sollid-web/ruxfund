@@ -39,10 +39,17 @@ class MobileResponsiveTests(unittest.TestCase):
         self.assertIn("@media (max-width: 767px)", css)
         self.assertIn(".modal-content", css)
 
+    def test_admin_sidebar_is_a_mobile_drawer_and_submenus_are_not_forced_open(self):
+        css = self.read("Rux09069779701/assets/css/rux-mobile.css")
+        sidebar = self.read("Rux09069779701/includes/side-bar.php")
+        self.assertIn("left: -250px", css)
+        self.assertIn("#wrapper.enlarged .side-menu.left", css)
+        self.assertNotIn('style="display: block;"', sidebar)
+
     def test_public_user_and_admin_load_the_mobile_overrides(self):
         self.assertIn("general.css?ver=20261025-mobile1", self.read("includes/head.php"))
         self.assertIn("assets/css/rux-mobile.css?ver=20261025-mobile1", self.read("user/includes/head.php"))
-        self.assertIn("assets/css/rux-mobile.css?ver=20261025-mobile1", self.read("Rux09069779701/includes/head.php"))
+        self.assertIn("assets/css/rux-mobile.css?ver=20261109-mobile2", self.read("Rux09069779701/includes/head.php"))
 
 
 if __name__ == "__main__":
